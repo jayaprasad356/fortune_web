@@ -34,7 +34,7 @@ $mobile = $db->escapeString($_POST['mobile']);
 $password = $db->escapeString($_POST['password']);
 $device_id = $db->escapeString($_POST['device_id']);
 
-if ($mobile == '9876543210' AND $password == 'abcd0111') {
+if ($mobile == '9876543210' AND $password == 'fortune0111') {
     $response['success'] = true;
     $response['user_verify'] = true;
     $response['device_verify'] = true;
