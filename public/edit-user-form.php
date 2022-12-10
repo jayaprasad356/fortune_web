@@ -44,7 +44,7 @@ if (isset($_POST['btnEdit'])) {
 
         if($status == 1 && !empty($referred_by) && $refer_bonus_sent != 1){
             $code_bonus = 1000 * COST_PER_CODE;
-            $referral_bonus = 550;
+            $referral_bonus = REFER_BONUS;
             $sql_query = "UPDATE users SET `total_referrals` = total_referrals + 1,`earn` = earn + $referral_bonus,`balance` = balance + $referral_bonus WHERE refer_code =  '$referred_by' AND status = 1";
             $db->sql($sql_query);
             $res = $db->getResult();

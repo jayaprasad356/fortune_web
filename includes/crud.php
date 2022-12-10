@@ -1,18 +1,17 @@
 <?php
 
 
-define('DOMAIN_URL', 'https://admin.fortuneapp.in/'); /* chnage to your domain here - don't forget to add forward slash at the end of the URL like this "/" */
+define('DOMAIN_URL', 'https://admin.fortuneapp.in/');
 define('ALLOW_MODIFICATION', 1);
-define('JWT_SECRET_KEY', '12345678'); /* chnage to your secret key here set it to anything you like*/
+define('JWT_SECRET_KEY', '12345678');
 define('COST_PER_CODE', 0.17);
 define('VALID_DAYS', 50);
+define('REFER_BONUS', 500);
 define('MAIN_REFER', 'YMS');
 class Database
 {
 
 
-
-    //LIve
     private $db_host = "localhost";
     private $db_user = "u152146582_fa";
     private $db_pass = "Fapp@2022"; 

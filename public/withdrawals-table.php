@@ -119,6 +119,7 @@ if (isset($_POST['btnCancel'])  && isset($_POST['enable'])) {
                                         <th data-field="name" data-sortable="true" data-visible="true" data-footer-formatter="totalFormatter">Name</th>
                                         <th data-field="amount" data-sortable="true" data-visible="true" data-footer-formatter="priceFormatter">Amount</th>
                                         <th data-field="status" data-sortable="true">Status</th>
+                                        <th data-field="type" data-sortable="true">Type</th>
                                         <th data-field="balance" data-sortable="true">Balance</th>
                                         <th data-field="datetime" data-sortable="true">DateTime</th>
                                         <th data-field="account_num" data-sortable="true">Account Number</th>

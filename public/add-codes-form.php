@@ -22,7 +22,7 @@ if (isset($_POST['btnAdd'])) {
             if (!empty($codes)) 
             {
                 $datetime = date('Y-m-d H:i:s');
-                $type = 'generate';
+                $type = 'code_bonus';
                 $amount = $codes * COST_PER_CODE;
                 $sql = "INSERT INTO transactions (`user_id`,`codes`,`amount`,`datetime`,`type`)VALUES('$ID','$codes','$amount','$datetime','$type')";
                 $db->sql($sql);

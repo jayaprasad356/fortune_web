@@ -229,15 +229,15 @@ if (isset($_GET['table']) && $_GET['table'] == 'withdrawals') {
     if (isset($_GET['order'])) {
         $order = $db->escapeString($_GET['order']);
     }
-    $join = "WHERE w.user_id = u.id AND w.user_id = b.user_id ";
+    $join = "LEFT JOIN users u ON w.user_id = u.id LEFT JOIN bank_details b ON b.user_id = w.user_id WHERE w.id IS NOT NULL ";
 
-    $sql = "SELECT COUNT(w.id) as total FROM `withdrawals` w,`users` u,`bank_details` b $join ". $where ."";
+    $sql = "SELECT COUNT(w.id) as total FROM `withdrawals` w $join ". $where ."";
     $db->sql($sql);
     $res = $db->getResult();
     foreach ($res as $row)
         $total = $row['total'];
 
-    $sql = "SELECT w.id AS id,w.*,u.name,u.total_codes,u.total_referrals,u.balance,u.mobile,u.referred_by,u.refer_code,DATEDIFF( '$currentdate',u.joined_date) AS history,b.branch,b.bank,b.account_num,b.ifsc,b.holder_name FROM `withdrawals` w,`users` u,`bank_details` b $join
+    $sql = "SELECT w.id AS id,w.*,w.type AS type,u.name,u.total_codes,u.total_referrals,u.balance,u.mobile,u.referred_by,u.refer_code,DATEDIFF( '$currentdate',u.joined_date) AS history,b.branch,b.bank,b.account_num,b.ifsc,b.holder_name FROM `withdrawals` w $join
     $where ORDER BY $sort $order LIMIT $offset, $limit";
      $db->sql($sql);
     $res = $db->getResult();
@@ -265,6 +265,7 @@ if (isset($_GET['table']) && $_GET['table'] == 'withdrawals') {
         $tempRow['referred_by'] = $row['referred_by'];
         $tempRow['refer_code'] = $row['refer_code'];
         $tempRow['history'] = $row['history'];
+        $tempRow['type'] = $row['type'];
         $tempRow['ifsc'] = $row['ifsc'];
         $tempRow['column'] = $checkbox;
         if($row['status']==1)

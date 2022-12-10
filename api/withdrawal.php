@@ -27,9 +27,15 @@ if (empty($_POST['amount'])) {
     print_r(json_encode($response));
     return false;
 }
+if (empty($_POST['type'])) {
+    $response['success'] = false;
+    $response['message'] = "Type is Empty";
+    print_r(json_encode($response));
+    return false;
+}
 $user_id = $db->escapeString($_POST['user_id']);
 $amount = $db->escapeString($_POST['amount']);
-
+$type = $db->escapeString($_POST['type']);
 
 $sql = "SELECT * FROM settings";
 $db->sql($sql);
@@ -46,12 +52,12 @@ $db->sql($sql);
 $res = $db->getResult();
 $num = $db->numRows($res);
 if($withdrawal_status == 1 &&  $main_ws == 1 ){
-    if ($num >= 1) {
+    if ($num >= 1 || $type == 'cash_payment') {
         if($balance >= 250){
             if($balance >= $amount){
                 $sql = "UPDATE `users` SET `balance` = balance - $amount,`withdrawal` = withdrawal + $amount WHERE `id` = $user_id";
                 $db->sql($sql);
-                $sql = "INSERT INTO withdrawals (`user_id`,`amount`,`datetime`)VALUES('$user_id','$amount','$datetime')";
+                $sql = "INSERT INTO withdrawals (`user_id`,`amount`,`datetime`,`type`)VALUES('$user_id','$amount','$datetime','$type')";
                 $db->sql($sql);
                 $sql = "SELECT * FROM users WHERE id = $user_id ";
                 $db->sql($sql);
