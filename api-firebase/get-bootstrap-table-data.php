@@ -509,4 +509,105 @@ if (isset($_GET['table']) && $_GET['table'] == 'manage_devices') {
     $bulkData['rows'] = $rows;
     print_r(json_encode($bulkData));
 }
+if (isset($_GET['table']) && $_GET['table'] == 'manage_users') {
+    $offset = 0;
+    $limit = 10;
+    $where = '';
+    $sort = 'id';
+    $order = 'DESC';
+    if ((isset($_GET['status'])  && $_GET['status'] != '')) {
+        $status = $db->escapeString($fn->xss_clean($_GET['status']));
+        $where .= "AND status='$status' ";
+    }
+    if (isset($_GET['offset']))
+        $offset = $db->escapeString($fn->xss_clean($_GET['offset']));
+    if (isset($_GET['limit']))
+        $limit = $db->escapeString($fn->xss_clean($_GET['limit']));
+
+    if (isset($_GET['sort']))
+        $sort = $db->escapeString($fn->xss_clean($_GET['sort']));
+    if (isset($_GET['order']))
+        $order = $db->escapeString($fn->xss_clean($_GET['order']));
+
+    if (isset($_GET['search']) && !empty($_GET['search'])) {
+        $search = $db->escapeString($fn->xss_clean($_GET['search']));
+        $where .= "AND name like '%" . $search . "%' OR mobile like '%" . $search . "%' OR city like '%" . $search . "%' OR email like '%" . $search . "%' ";
+    }
+    if (isset($_GET['sort'])) {
+        $sort = $db->escapeString($_GET['sort']);
+    }
+    if (isset($_GET['order'])) {
+        $order = $db->escapeString($_GET['order']);
+    }
+
+
+    
+    if($_SESSION['role'] == 'Super Admin'){
+        $join = "WHERE id IS NOT NULL";
+    }
+    else{
+        $refer_code = $_SESSION['refer_code'];
+        $join = "WHERE refer_code REGEXP '^$refer_code'";
+    }
+    $sql = "SELECT COUNT(`id`) as total FROM `users` $join " . $where;
+    $db->sql($sql);
+    $res = $db->getResult();
+    foreach ($res as $row)
+        $total = $row['total'];
+
+        
+    $sql = "SELECT *,DATEDIFF( '$currentdate',joined_date) AS history FROM `users` $join " . $where . " ORDER BY " . $sort . " " . $order . " LIMIT " . $offset . "," . $limit;
+    $db->sql($sql);
+    $res = $db->getResult();
+
+    $bulkData = array();
+    $bulkData['total'] = $total;
+    $rows = array();
+    $tempRow = array();
+    foreach ($res as $row) {
+        if($row['status'] !=1){
+            $operate = '<a href="verify-user.php?id=' . $row['id'] . '" class="text text-primary">Verify</a>';
+        }
+        else{
+            $operate = "<label class='label label-success'>Verified</label>";
+        }
+        $tempRow['id'] = $row['id'];
+        $tempRow['name'] = $row['name'];
+        $tempRow['mobile'] = $row['mobile'];
+        $tempRow['password'] = $row['password'];
+        $tempRow['dob'] = $row['dob'];
+        $tempRow['email'] = $row['email'];
+        $tempRow['city'] = $row['city'];
+        $tempRow['device_id'] = $row['device_id'];
+        $tempRow['refer_code'] = $row['refer_code'];
+        $tempRow['referred_by'] = $row['referred_by'];
+        $tempRow['earn'] = $row['earn'];
+        $tempRow['total_referrals'] = $row['total_referrals'];
+        $tempRow['today_codes'] = $row['today_codes'];
+        $tempRow['total_codes'] = $row['total_codes'];
+        $tempRow['balance'] = $row['balance'];
+        $tempRow['history'] = $row['history'];
+        $tempRow['withdrawal'] = $row['withdrawal'];
+        // if($row['status']==0)
+        //     $tempRow['status'] ="<label class='label label-default'>Not Verify</label>";
+        // elseif($row['status']==1)
+        //     $tempRow['status']="<label class='label label-success'>Verified</label>";        
+        // else
+        //     $tempRow['status']="<label class='label label-danger'>Blocked</label>";
+        if($row['code_generate']==1)
+            $tempRow['code_generate'] ="<p class='text text-success'>enabled</p>";
+        else
+            $tempRow['code_generate']="<p class='text text-danger'>disabled</p>";
+
+        if($row['withdrawal_status']==1)
+            $tempRow['withdrawal_status'] ="<p class='text text-success'>enabled</p>";
+        else
+            $tempRow['withdrawal_status']="<p class='text text-danger'>disabled</p>";
+        $tempRow['operate'] = $operate;
+
+        $rows[] = $tempRow;
+    }
+    $bulkData['rows'] = $rows;
+    print_r(json_encode($bulkData));
+}
 $db->disconnect();
