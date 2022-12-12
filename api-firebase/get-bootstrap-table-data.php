@@ -254,7 +254,7 @@ if (isset($_GET['table']) && $_GET['table'] == 'withdrawals') {
         $tempRow['name'] = $row['name'];
         $tempRow['amount'] = $row['amount'];
         $tempRow['datetime'] = $row['datetime'];
-        $tempRow['account_num'] = $row['account_num'];
+        $tempRow['account_num'] = ','.$row['account_num'].',';
         $tempRow['holder_name'] = $row['holder_name'];
         $tempRow['bank'] = $row['bank'];
         $tempRow['branch'] = $row['branch'];
@@ -566,12 +566,6 @@ if (isset($_GET['table']) && $_GET['table'] == 'manage_users') {
     $rows = array();
     $tempRow = array();
     foreach ($res as $row) {
-        if($row['status'] !=1){
-            $operate = '<a href="verify-user.php?id=' . $row['id'] . '" class="text text-primary">Verify</a>';
-        }
-        else{
-            $operate = "<label class='label label-success'>Verified</label>";
-        }
         $tempRow['id'] = $row['id'];
         $tempRow['name'] = $row['name'];
         $tempRow['mobile'] = $row['mobile'];
@@ -589,12 +583,12 @@ if (isset($_GET['table']) && $_GET['table'] == 'manage_users') {
         $tempRow['balance'] = $row['balance'];
         $tempRow['history'] = $row['history'];
         $tempRow['withdrawal'] = $row['withdrawal'];
-        // if($row['status']==0)
-        //     $tempRow['status'] ="<label class='label label-default'>Not Verify</label>";
-        // elseif($row['status']==1)
-        //     $tempRow['status']="<label class='label label-success'>Verified</label>";        
-        // else
-        //     $tempRow['status']="<label class='label label-danger'>Blocked</label>";
+        if($row['status']==0)
+            $operate = '<a href="verify-user.php?id=' . $row['id'] . '" class="text text-primary">Verify</a>';
+        elseif($row['status']==1)
+            $operate = "<label class='label label-success'>Verified</label>";   
+        else
+            $operate = "<label class='label label-danger'>Blocked</label>";
         if($row['code_generate']==1)
             $tempRow['code_generate'] ="<p class='text text-success'>enabled</p>";
         else
