@@ -70,7 +70,14 @@ include "header.php";
                     <div class="small-box bg-green">
                         <div class="inner">
                         <h3><?php
-                            $sql = "SELECT * FROM users WHERE status=1";
+                            if($_SESSION['role'] == 'Super Admin'){
+                                $join = "WHERE status=1";
+                            }
+                            else{
+                                $refer_code = $_SESSION['refer_code'];
+                                $join = "WHERE status=1 AND refer_code REGEXP '^$refer_code'";
+                            }
+                            $sql = "SELECT * FROM users $join";
                             $db->sql($sql);
                             $res = $db->getResult();
                             $num = $db->numRows($res);
