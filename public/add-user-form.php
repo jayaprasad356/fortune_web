@@ -43,12 +43,21 @@ if (isset($_POST['btnAdd'])) {
        
        if (!empty($name) && !empty($email) && !empty($mobile) && !empty($password) && !empty($city)  && !empty($dob)) 
        {
+        do {
+            $random_number = mt_rand(10000,99999);
+            $sql = "SELECT * FROM users WHERE refer_code = $random_number";
+            $db->sql($sql);
+            $res = $db->getResult();
+            if(!$res) {
+                break;
+            }
+        } while(1);
         if(empty($referred_by)){
-            $refer_code = MAIN_REFER . $db->random_strings(5);
+            $refer_code = MAIN_REFER . $random_number;
     
         }
         else{
-            $refer_code = substr($referred_by, 0, -5) . $db->random_strings(5);
+            $refer_code = substr($referred_by, 0, -5) . $random_number;
     
         }
         $sql = "SELECT * FROM users WHERE mobile='$mobile'";
