@@ -105,7 +105,7 @@ include "header.php";
                             <p>Today Registration</p>
                         </div>
                         <div class="icon"><i class="fa fa-calendar"></i></div>
-                        <a href="users.php" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+                        <a href="users.php?date=<?php echo date('Y-m-d') ?>" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
                     </div>
                 </div>
                 <div class="col-lg-4 col-xs-6">

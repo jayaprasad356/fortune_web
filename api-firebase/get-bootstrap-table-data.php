@@ -49,6 +49,10 @@ if (isset($_GET['table']) && $_GET['table'] == 'users') {
     $where = '';
     $sort = 'id';
     $order = 'DESC';
+    if ((isset($_GET['date'])  && $_GET['date'] != '')) {
+        $date = $db->escapeString($fn->xss_clean($_GET['date']));
+        $where .= "AND joined_date='$date' ";
+    }
     if (isset($_GET['offset']))
         $offset = $db->escapeString($fn->xss_clean($_GET['offset']));
     if (isset($_GET['limit']))

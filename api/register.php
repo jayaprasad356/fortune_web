@@ -76,8 +76,18 @@ if ($num >= 1) {
     return false;
 }
 else{
+
+    do {
+        $random_number = mt_rand(10000,99999);
+        $sql = "SELECT * FROM users WHERE refer_code = $random_number";
+        $db->sql($sql);
+        $res = $db->getResult();
+        if(!$res) {
+            break;
+        }
+    } while(1);
     if(empty($referred_by)){
-        $refer_code = MAIN_REFER . $db->random_strings(5);
+        $refer_code = MAIN_REFER . $random_number;
 
     }
     else{
@@ -88,10 +98,10 @@ else{
         $num = $db->numRows($result);
         if($num>=1){
             $admincode = $result[0]['refer_code'];
-            $refer_code = $admincode . $db->random_strings(5);
+            $refer_code = $admincode . $random_number;
         }
         else{
-            $refer_code = MAIN_REFER . $db->random_strings(5);
+            $refer_code = MAIN_REFER . $random_number;
         }
     }
 
