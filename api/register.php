@@ -105,9 +105,9 @@ else{
         }
     }
 
-    
+    $currentdate = date('Y-m-d');
     $datetime = date('Y-m-d H:i:s');
-    $sql = "INSERT INTO users (`name`,`mobile`,`email`,`password`,`city`,`dob`,`referred_by`,`device_id`,`refer_code`,`last_updated`)VALUES('$name','$mobile','$email','$password','$city','$dob','$referred_by','$device_id','$refer_code','$datetime')";
+    $sql = "INSERT INTO users (`name`,`mobile`,`email`,`password`,`city`,`dob`,`referred_by`,`device_id`,`refer_code`,`joined_date`,`last_updated`)VALUES('$name','$mobile','$email','$password','$city','$dob','$referred_by','$device_id','$refer_code','$currentdate','$datetime')";
     $db->sql($sql);
     $sql = "SELECT * FROM users WHERE mobile = '$mobile'";
     $db->sql($sql);
