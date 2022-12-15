@@ -26,7 +26,7 @@ class Firebase {
         
         // firebase server url to send the curl request
         $url = 'https://fcm.googleapis.com/fcm/send';
-        $key = 'AAAAdmIkaQE:APA91bHwF4LxBdtNtX4EXEnE6lUs6BCzO_Q3T4nAzuB1qIC7bhYr4SUUlOp1uYv0cI5DVcFZbuvXITF8GsRDngu30SnGTAVnv1lgBk2OZoXoOqrZJ7OrOHdPt3x5JewZiaobgaW0XOaI';
+        $key = 'AAAAUKRLzos:APA91bGbBTsw3jn0Froyj970dlTYpPihocsXnfiarqC5I2Nui6TOhRinV-OsKtrBueEj91HbuQspq93aE1pNbnAFcfjoJZEbJcz2jfGbc5pfIsNFnf7mRW5ut02YpnsHjzK9LAYyFDR6';
         
         define("FIREBASE_API_KEY",$key);
         
