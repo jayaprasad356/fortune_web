@@ -27,7 +27,7 @@
 		$sql_query = "SELECT * FROM users WHERE id =" . $ID;
 		$db->sql($sql_query);
 		$res = $db->getResult();
-		$status = $res[0]['status'];
+		$status = $db->escapeString(($_POST['status']));
 		$referred_by = $res[0]['referred_by'];
 		$refer_bonus_sent = $res[0]['refer_bonus_sent'];
 		$earn = $res[0]['earn'];
@@ -109,6 +109,7 @@
 		<hr />
 		<form method="post">
 			<p>Are you sure want to Verify this User?</p>
+			<input type="hidden" class="btn btn-success" value="1" name="status" />
 			   <input type="submit" class="btn btn-success" value="Verify" name="btnUpdate" />
 			<input type="submit" class="btn btn-danger" value="Cancel" name="btnNo" />
 		</form>
