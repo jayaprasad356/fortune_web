@@ -83,8 +83,8 @@
         }
 
 
-		$sql_query = "UPDATE users SET status=1,joined_date = '$date' WHERE id =" . $ID;
-		$db->sql($sql_query);
+		$sql_query = "UPDATE users SET earn='$earn',balance='$balance',total_codes=$total_codes, today_codes=$today_codes,status = $status,joined_date = '$date' WHERE id =  $ID";
+        $db->sql($sql_query);
 		$verify_result = $db->getResult();
 		if (!empty($verify_result)) {
 			$verify_result = 0;
