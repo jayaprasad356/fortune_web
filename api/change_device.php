@@ -13,6 +13,10 @@ include_once('../includes/crud.php');
 $db = new Database();
 $db->connect();
 
+include_once('../includes/functions.php');
+$fn = new functions;
+$fn->monitorApi('change_device');
+
 if (empty($_POST['mobile'])) {
     $response['success'] = false;
     $response['message'] = "Mobile is Empty";

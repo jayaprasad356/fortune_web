@@ -13,7 +13,9 @@ include_once('../includes/crud.php');
 $db = new Database();
 $db->connect();
 date_default_timezone_set('Asia/Kolkata');
-
+include_once('../includes/functions.php');
+$fn = new functions;
+$fn->monitorApi('wallet');
 
 if (empty($_POST['user_id'])) {
     $response['success'] = false;
@@ -22,80 +24,32 @@ if (empty($_POST['user_id'])) {
     return false;
 }
 
-
 $user_id = $db->escapeString($_POST['user_id']);
-$codes = $db->escapeString($_POST['codes']);
-$fcm_id = $db->escapeString($_POST['fcm_id']);
-$date = date('Y-m-d');
+$codes = (isset($_POST['codes']) && $_POST['codes'] != "") ? $db->escapeString($_POST['codes']) : 0;
 $datetime = date('Y-m-d H:i:s');
-$sql = "SELECT *,datediff('$date', joined_date) AS history_days,datediff('$datetime', last_updated) AS days  FROM users WHERE id = $user_id ";
-$db->sql($sql);
-$res = $db->getResult();
-$history_days = $res[0]['history_days'];
-
-
-if(!empty($fcm_id)){
-    $sql = "UPDATE `users` SET  `fcm_id` = '$fcm_id' WHERE `id` = $user_id";
-    $db->sql($sql);
-
-}
-if($history_days > VALID_DAYS){
-    $sql = "UPDATE `users` SET  `code_generate` = 0 WHERE `id` = $user_id";
-    $db->sql($sql);
-
-}
-
-$last_updated = $res[0]['last_updated'];
-$days = $res[0]['days'];
-if($days != 0){
-    $sql = "UPDATE `users` SET  `today_codes` = 0,`last_updated` = '$datetime' WHERE `id` = $user_id";
-    $db->sql($sql);
-
-}
 $type = 'generate';
-$sql = "SELECT * FROM settings";
-$db->sql($sql);
-$setres = $db->getResult();
-$code_generate = $setres[0]['code_generate'];
-if($code_generate == 1){
-    if($codes != 0){
-        $amount = $codes * COST_PER_CODE;
-        $sql = "INSERT INTO transactions (`user_id`,`codes`,`amount`,`datetime`,`type`)VALUES('$user_id','$codes','$amount','$datetime','$type')";
-        $db->sql($sql);
-        $res = $db->getResult();
-    
-        $sql = "UPDATE `users` SET  `today_codes` = today_codes + $codes,`total_codes` = total_codes + $codes,`earn` = earn + $amount,`balance` = balance + $amount WHERE `id` = $user_id";
-        $db->sql($sql);
-    }
-    
+if($codes != 0){
+    $amount = $codes * COST_PER_CODE;
+    $sql = "INSERT INTO transactions (`user_id`,`codes`,`amount`,`datetime`,`type`)VALUES('$user_id','$codes','$amount','$datetime','$type')";
+    $db->sql($sql);
+    $res = $db->getResult();
+
+    $sql = "UPDATE `users` SET  `today_codes` = today_codes + $codes,`total_codes` = total_codes + $codes,`earn` = earn + $amount,`balance` = balance + $amount WHERE `id` = $user_id";
+    $db->sql($sql);
 }
 
-
-
-
-$sql = "SELECT * FROM users WHERE id = $user_id ";
-$db->sql($sql);
-$ures = $db->getResult();
-$balance = $ures[0]['balance'];
-$today_codes = $ures[0]['today_codes'];
-$total_codes = $ures[0]['total_codes'];
-
-
-
-$sql = "SELECT * FROM transactions WHERE user_id = $user_id AND datetime >= ( CURDATE() - INTERVAL 2 DAY ) ORDER BY ID DESC";
+$sql = "SELECT today_codes,total_codes,balance,code_generate,status  FROM users WHERE id = $user_id ";
 $db->sql($sql);
 $res = $db->getResult();
-
-$sql = "SELECT * FROM bank_details WHERE user_id = $user_id";
-$db->sql($sql);
-$bank_details_res = $db->getResult();
 
 $response['success'] = true;
-$response['message'] = "Wallet Retrived Successfully";
-$response['settings'] = $setres;
-$response['user_details'] = $ures;
-$response['bank_details'] = $bank_details_res;
-$response['data'] = $res;
+$response['message'] = "Code Added Successfully";
+$response['status'] = $res[0]['status'];
+$response['balance'] = $res[0]['balance'];
+$response['today_codes'] = $res[0]['today_codes'];
+$response['total_codes'] = $res[0]['total_codes'];
+$response['code_generate'] = $res[0]['code_generate'];
+$response['status'] = $res[0]['status'];
 print_r(json_encode($response));
 
 

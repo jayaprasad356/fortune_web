@@ -12,6 +12,9 @@ include_once('../includes/crud.php');
 
 $db = new Database();
 $db->connect();
+include_once('../includes/functions.php');
+$fn = new functions;
+$fn->monitorApi('register');
 date_default_timezone_set('Asia/Kolkata');
 
 if (empty($_POST['name'])) {

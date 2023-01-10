@@ -212,6 +212,12 @@ $fn = new custom_functions;
                     </a>
                 </li>
                 <li class="treeview">
+                    <a href="search_withdrawals.php">
+                    <i class="fa fa-search"></i>
+                        <span>Search Withdrawals</span>
+                    </a>
+                </li>
+                <li class="treeview">
                     <a href="transactions.php">
                     <i class="fa fa-arrow-right"></i>
                        <span>Transactions</span>

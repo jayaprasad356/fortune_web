@@ -1,4 +1,5 @@
 <?php
+$currentdate = date('Y-m-d');
 if (isset($_POST['btnUnpaid']) && isset($_POST['enable'])) {
     for ($i = 0; $i < count($_POST['enable']); $i++) {
         
@@ -43,14 +44,33 @@ if (isset($_POST['btnCancel'])  && isset($_POST['enable'])) {
             
 
         }
-    
-
-
-
-
     }
 }
 
+?>
+<?php
+if (isset($_POST['export_all'])) {
+	$join = "WHERE w.user_id = u.id AND w.user_id = b.user_id AND w.status= 0";
+	$sql = "SELECT w.id AS id,w.*,u.name,u.total_codes,u.total_referrals,u.balance,u.mobile,u.referred_by,u.refer_code,DATEDIFF( '$currentdate',u.joined_date) AS history,b.branch,b.bank,b.account_num,b.ifsc,b.holder_name FROM `withdrawals` w,`users` u,`bank_details` b $join";
+	$db->sql($sql);
+	$developer_records = $db->getResult();
+	
+	$filename = "withdrawals-data".date('Ymd') . ".xls";			
+	header("Content-Type: application/vnd.ms-excel");
+	header("Content-Disposition: attachment; filename=\"$filename\"");	
+	$show_coloumn = false;
+	if(!empty($developer_records)) {
+	  foreach($developer_records as $record) {
+		if(!$show_coloumn) {
+		  // display field/column names in first row
+		  echo implode("\t", array_keys($record)) . "\n";
+		  $show_coloumn = true;
+		}
+		echo implode("\t", array_values($record)) . "\n";
+	  }
+	}
+	exit;  
+}
 ?>
 
 
@@ -91,6 +111,14 @@ if (isset($_POST['btnCancel'])  && isset($_POST['enable'])) {
                                                             <option value='<?= $value['id'] ?>'><?= $value['name'] ?></option>
                                                     <?php } ?>
                                                 </select>
+                                        </div>
+                                        <div class="form-group col-md-3">
+                                            <a href="export-withdrawals.php" class="btn btn-primary"><i class="fa fa-download"></i> Export All Withdrawals</a>
+                                        <!-- <button type='submit' name="export_all"  class="btn btn-primary"><i class="fa fa-download"></i> Export All Withdrawals</button> -->
+                                        </div>
+                                        <div class="form-group col-md-3">
+                                            <a href="export-unpaid-withdrawals.php" class="btn btn-primary"><i class="fa fa-download"></i> Export Unpaid Withdrawals</a>
+                                        <!-- <button type='submit' name="export_all"  class="btn btn-primary"><i class="fa fa-download"></i> Export All Withdrawals</button> -->
                                         </div>
                                 </div>
                         </div>

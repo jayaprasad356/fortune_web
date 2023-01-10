@@ -281,6 +281,13 @@ class functions
         $num_rows = $this->db->numRows($res);
         return ($num_rows > 0) ? true : false;
     }
+
+    function monitorApi($api_name)
+    {
+        $datetime = date('Y-m-d H:i:s');
+        $sql = "INSERT INTO `montior` (`api`, `datetime`) VALUES ('$api_name', '$datetime')";
+        $this->db->sql($sql);
+    }
     //getting all tokens to send push to all devices
     public function getAllTokens($table = 'users')
     {

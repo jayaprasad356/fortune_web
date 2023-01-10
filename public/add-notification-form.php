@@ -13,6 +13,7 @@ if (isset($_POST['btnd'])) {
 
         $title = $db->escapeString(($_POST['title']));
         $description = $db->escapeString($_POST['description']);
+        $link = $db->escapeString($_POST['link']);
         $error = array();
        
         if (empty($title)) {
@@ -27,7 +28,7 @@ if (isset($_POST['btnd'])) {
        {
         $datetime = date('Y-m-d H:i:s');
            
-            $sql_query = "INSERT INTO notifications (title,description,datetime)VALUES('$title','$description','$datetime')";
+            $sql_query = "INSERT INTO notifications (title,description,datetime,link)VALUES('$title','$description','$datetime','$link')";
             $db->sql($sql_query);
             $result = $db->getResult();
             if (!empty($result)) {
@@ -82,6 +83,15 @@ if (isset($_POST['btnd'])) {
                                 <div class="col-md-12">
                                     <label for="exampleInputEmail1">Description</label><i class="text-danger asterik">*</i><?php echo isset($error['description']) ? $error['description'] : ''; ?>
                                     <textarea  rows="3" type="number" class="form-control" name="description" required></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <br>
+                        <div class="row">
+                            <div class="form-group">
+                                <div class='col-md-6'>
+                                    <label for="exampleInputEmail1">Link</label> <i class="text-danger asterik">*</i><?php echo isset($error['link']) ? $error['link'] : ''; ?>
+                                    <input type="text" class="form-control" name="link">
                                 </div>
                             </div>
                         </div>
