@@ -55,7 +55,7 @@ if ($mobile == '9876543210' AND $password == 'fortune0111') {
     print_r(json_encode($response));
     return false;
 }
-$sql = "SELECT * FROM users WHERE mobile ='$mobile' AND password ='$password'";
+$sql = "SELECT * FROM users WHERE mobile ='$mobile'";
 $db->sql($sql);
 $res = $db->getResult();
 $num = $db->numRows($res);
