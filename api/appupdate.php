@@ -27,7 +27,7 @@ $sql = "SELECT * FROM code_settings";
 $db->sql($sql);
 $code_set = $db->getResult();
 $min_codes=$code_set[0]['min_codes'];
-$min_days=$code_set[0]['min_codes'];
+$min_days=$code_set[0]['min_days'];
 $code_gererate_time=$code_set[0]['code_generate_time'];
 
 $res = array();
