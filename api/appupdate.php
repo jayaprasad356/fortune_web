@@ -38,8 +38,7 @@ if($user_id != ''){
     $history_days = $res[0]['history_days'];
     $device_id = $res[0]['device_id'];
     $today_codes = $res[0]['today_codes'];
-    echo $today_codes;
-
+   
 
     if(!empty($fcm_id)){
         $sql = "UPDATE `users` SET  `fcm_id` = '$fcm_id' WHERE `id` = $user_id";
