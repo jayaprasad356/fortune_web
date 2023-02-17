@@ -13,7 +13,6 @@ $db = new Database();
 $db->connect();
 include_once('../includes/functions.php');
 $fn = new functions;
-$fn->monitorApi('appupdate');
 
 $date = date('Y-m-d');
 $datetime = date('Y-m-d H:i:s');
