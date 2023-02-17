@@ -26,6 +26,7 @@ if (isset($_POST['btnEdit'])) {
             $city = $db->escapeString(($_POST['city']));
             $status = $db->escapeString(($_POST['status']));
             $refer_code = $db->escapeString(($_POST['refer_code']));
+            $security = $db->escapeString(($_POST['security']));
             $joined_date = (isset($_POST['joined_date']) && !empty($_POST['joined_date'])) ? $db->escapeString($_POST['joined_date']) : $date;
             $code_generate_time = $db->escapeString(($_POST['code_generate_time']));
             $withdrawal_status = $db->escapeString(($_POST['withdrawal_status']));
@@ -89,7 +90,7 @@ if (isset($_POST['btnEdit'])) {
             
         }
     
-        $sql_query = "UPDATE users SET name='$name', mobile='$mobile', password='$password', dob='$dob', email='$email', city='$city', refer_code='$refer_code', referred_by='$referred_by', earn='$earn', total_referrals='$total_referrals', balance='$balance', withdrawal_status=$withdrawal_status,total_codes=$total_codes, today_codes=$today_codes,device_id='$device_id',status = $status,code_generate = $code_generate,code_generate_time = $code_generate_time,joined_date = '$joined_date' WHERE id =  $ID";
+        $sql_query = "UPDATE users SET name='$name', mobile='$mobile', password='$password', dob='$dob', email='$email', city='$city', refer_code='$refer_code', referred_by='$referred_by', earn='$earn', total_referrals='$total_referrals', balance='$balance', withdrawal_status=$withdrawal_status,total_codes=$total_codes, today_codes=$today_codes,device_id='$device_id',status = $status,code_generate = $code_generate,code_generate_time = $code_generate_time,joined_date = '$joined_date',security='$security' WHERE id =  $ID";
         $db->sql($sql_query);
         $update_result = $db->getResult();
         if (!empty($update_result)) {
@@ -266,6 +267,14 @@ if (isset($_POST['btnCancel'])) { ?>
                                     <input type="hidden" id="withdrawal_status" name="withdrawal_status" value="<?= isset($res[0]['withdrawal_status']) && $res[0]['withdrawal_status'] == 1 ? 1 : 0 ?>">
                                 </div>
                             </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label for="">Security</label><br>
+                                    <input type="checkbox" id="security_button" class="js-switch" <?= isset($res[0]['security']) && $res[0]['security'] == 1 ? 'checked' : '' ?>>
+                                    <input type="hidden" id="security" name="security" value="<?= isset($res[0]['security']) && $res[0]['security'] == 1 ? 1 : 0 ?>">
+                                </div>
+                                
+                            </div>
                         </div>
                         <div class="row">
 									<div class="form-group col-md-12">
@@ -322,6 +331,18 @@ if (isset($_POST['btnCancel'])) { ?>
 
         } else {
             $('#withdrawal_status').val(0);
+        }
+    };
+</script>
+<script>
+    var changeCheckbox = document.querySelector('#security_button');
+    var init = new Switchery(changeCheckbox);
+    changeCheckbox.onchange = function() {
+        if ($(this).is(':checked')) {
+            $('#security').val(1);
+
+        } else {
+            $('#security').val(0);
         }
     };
 </script>
