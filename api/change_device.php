@@ -49,10 +49,10 @@ if ($num == 1) {
     $res = $db->getResult();
     $num = $db->numRows($res);
     if ($num >= 1) {
-        $sql = "UPDATE device_requests SET device_id='$device_id' WHERE user_id=" . $user_id;
+        $sql = "UPDATE device_requests SET device_id='$device_id',status=0 WHERE user_id=" . $user_id;
         $db->sql($sql);
     }else{
-        $sql = "INSERT INTO device_requests (`user_id`,`device_id`)VALUES('$user_id','$device_id')";
+        $sql = "INSERT INTO device_requests (`user_id`,`device_id`,`status`)VALUES('$user_id','$device_id',0)";
         $db->sql($sql);
     }
     $response['success'] = true;
