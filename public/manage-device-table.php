@@ -1,8 +1,5 @@
 <section class="content-header">
     <h1>Manage Devices /<small><a href="home.php"><i class="fa fa-home"></i> Home</a></small></h1>
-
-
-
 </section>
     <!-- Main content -->
     <section class="content">
@@ -11,6 +8,16 @@
             <!-- Left col -->
             <div class="col-xs-12">
                 <div class="box">
+                        <div class="box-header">
+                                        <div class="form-group col-md-3">
+                                                <h4 class="box-title">Filter by Status </h4>
+                                                <select id='status' name="status" class='form-control'>
+                                                        <option value="">All</option>
+                                                        <option value="0">Not-verified</option>
+                                                        <option value="1">Verified</option>
+                                                </select>
+                                        </div>
+                        </div>
                     <!-- /.box-header -->
                     <div class="box-body table-responsive">
                         <table id='users_table' class="table table-hover" data-toggle="table" data-url="api-firebase/get-bootstrap-table-data.php?table=manage_devices" data-page-list="[5, 10, 20, 50, 100, 200]" data-show-refresh="true" data-show-columns="true" data-side-pagination="server" data-pagination="true" data-search="true" data-trim-on-search="false" data-filter-control="true" data-query-params="queryParams" data-sort-name="dq.id" data-sort-order="desc" data-show-export="true" data-export-types='["txt","csv"]' data-export-options='{
@@ -24,6 +31,7 @@
                                     <th data-field="mobile" data-sortable="true">Mobile</th>
                                     <th data-field="device_id" data-sortable="true">Device Id</th>
                                     <th data-field="operate">Action</th>
+                                    <th data-field="status" data-sortable="true">Status</th>
 
                                 </tr>
                             </thead>
@@ -39,8 +47,13 @@
     </section>
 
 <script>
+      $('#status').on('change', function() {
+            id = $('#status').val();
+            $('#users_table').bootstrapTable('refresh');
+        });
     function queryParams(p) {
         return {
+            "status": $('#status').val(),
             limit: p.limit,
             sort: p.sort,
             order: p.order,

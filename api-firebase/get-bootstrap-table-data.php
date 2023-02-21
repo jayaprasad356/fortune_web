@@ -470,6 +470,10 @@ if (isset($_GET['table']) && $_GET['table'] == 'manage_devices') {
     $where = '';
     $sort = 'dq.id';
     $order = 'DESC';
+    if ((isset($_GET['status'])  && $_GET['status'] != '')) {
+        $status = $db->escapeString($fn->xss_clean($_GET['status']));
+        $where .= "AND dq.status='$status' ";
+    }
     if (isset($_GET['offset']))
         $offset = $db->escapeString($fn->xss_clean($_GET['offset']));
     if (isset($_GET['limit']))
@@ -482,7 +486,7 @@ if (isset($_GET['table']) && $_GET['table'] == 'manage_devices') {
 
     if (isset($_GET['search']) && !empty($_GET['search'])) {
         $search = $db->escapeString($fn->xss_clean($_GET['search']));
-        $where .= "AND name like '%" . $search . "%' OR mobile like '%" . $search . "%'";
+        $where .= "AND u.name like '%" . $search . "%' OR u.mobile like '%" . $search . "%' ";
     }
     if (isset($_GET['sort'])) {
         $sort = $db->escapeString($_GET['sort']);
@@ -498,7 +502,7 @@ if (isset($_GET['table']) && $_GET['table'] == 'manage_devices') {
         $total = $row['total'];
 
 
-    $sql = "SELECT *,dq.id AS id,dq.device_id AS device_id FROM users u,device_requests dq $join " . $where . " ORDER BY " . $sort . " " . $order . " LIMIT " . $offset . "," . $limit;
+    $sql = "SELECT *,dq.id AS id,dq.device_id AS device_id,dq.status AS status FROM users u,device_requests dq $join " . $where . " ORDER BY " . $sort . " " . $order . " LIMIT " . $offset . "," . $limit;
     $db->sql($sql);
     $res = $db->getResult();
 
@@ -514,6 +518,10 @@ if (isset($_GET['table']) && $_GET['table'] == 'manage_devices') {
         $tempRow['mobile'] = $row['mobile'];
         $tempRow['device_id'] = $row['device_id'];
         $tempRow['operate'] = $operate;
+        if($row['status']==0)
+            $tempRow['status'] ="<label class='label label-danger'>Not-verified</label>";
+        else
+            $tempRow['status']="<label class='label label-success'>Verified</label>";
         $rows[] = $tempRow;
     }
     $bulkData['rows'] = $rows;

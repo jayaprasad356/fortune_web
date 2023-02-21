@@ -18,7 +18,7 @@ $db->connect();
     $device_id = $res[0]['device_id'];
     $sql_query = "UPDATE users SET `device_id` = '$device_id' WHERE id =" . $user_id;
     $db->sql($sql_query);
-	$sql_query = "DELETE  FROM device_requests WHERE id =" . $ID;
+	$sql_query = "UPDATE device_requests SET status=1 WHERE id =" . $ID;
 	$db->sql($sql_query);
 	$res = $db->getResult();
 	header("location:manage-devices.php");
