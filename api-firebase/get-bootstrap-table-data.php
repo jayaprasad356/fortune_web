@@ -118,6 +118,9 @@ if (isset($_GET['table']) && $_GET['table'] == 'users') {
         $tempRow['balance'] = $row['balance'];
         $tempRow['history'] = $row['history'];
         $tempRow['withdrawal'] = $row['withdrawal'];
+        $tempRow['ongoing_sa_balance'] = $row['ongoing_sa_balance'];
+        $tempRow['salary_advance_balance'] = $row['salary_advance_balance'];
+        $tempRow['sa_refer_count'] = $row['sa_refer_count'];
         if($row['status']==0)
             $tempRow['status'] ="<label class='label label-default'>Not Verify</label>";
         elseif($row['status']==1)
@@ -704,4 +707,337 @@ if (isset($_GET['table']) && $_GET['table'] == 'search_withdrawals') {
     $bulkData['rows'] = $rows;
     print_r(json_encode($bulkData));
 }
+
+
+//salary advance Transactions table goes here
+if (isset($_GET['table']) && $_GET['table'] == 'salary_advance_transactions') {
+    $offset = 0;
+    $limit = 10;
+    $where = '';
+    $sort = 'id';
+    $order = 'DESC';
+    // if (isset($_GET['type']) && !empty($_GET['type'])){
+    //     $type = $db->escapeString($fn->xss_clean($_GET['type']));
+    //     $where .= "AND t.type = '$type' ";
+    // }
+      
+    if (isset($_GET['offset']))
+        $offset = $db->escapeString($fn->xss_clean($_GET['offset']));
+    if (isset($_GET['limit']))
+        $limit = $db->escapeString($fn->xss_clean($_GET['limit']));
+
+    if (isset($_GET['sort']))
+        $sort = $db->escapeString($fn->xss_clean($_GET['sort']));
+    if (isset($_GET['order']))
+        $order = $db->escapeString($fn->xss_clean($_GET['order']));
+
+    if (isset($_GET['search']) && !empty($_GET['search'])) {
+        $search = $db->escapeString($fn->xss_clean($_GET['search']));
+        $where .= "AND u.name like '%" . $search . "%' OR t.amount like '%" . $search . "%' OR t.id like '%" . $search . "%'  OR t.type like '%" . $search . "%' OR u.mobile like '%" . $search . "%' ";
+    }
+    if (isset($_GET['sort'])) {
+        $sort = $db->escapeString($_GET['sort']);
+    }
+    if (isset($_GET['order'])) {
+        $order = $db->escapeString($_GET['order']);
+    }
+    $join = "LEFT JOIN `users` u ON t.refer_user_id = u.id WHERE t.id IS NOT NULL ";
+
+    $sql = "SELECT COUNT(t.id) as total FROM `salary_advance_trans` t $join " . $where . "";
+    $db->sql($sql);
+    $res = $db->getResult();
+    foreach ($res as $row)
+        $total = $row['total'];
+
+    $sql = "SELECT t.id AS id,t.*,u.name,u.mobile FROM `salary_advance_trans` t $join 
+    $where ORDER BY $sort $order LIMIT $offset, $limit";
+     $db->sql($sql);
+    $res = $db->getResult();
+
+    $bulkData = array();
+    $bulkData['total'] = $total;
+    $rows = array();
+    $tempRow = array();
+    foreach ($res as $row) {
+        
+        $tempRow['id'] = $row['id'];
+        $tempRow['name'] = $row['name'];
+        $tempRow['mobile'] = $row['mobile'];
+        $tempRow['amount'] = $row['amount'];
+        $tempRow['datetime'] = $row['datetime'];
+        $tempRow['type'] = $row['type'];
+        $rows[] = $tempRow;
+    }
+    $bulkData['rows'] = $rows;
+    print_r(json_encode($bulkData));
+}
+
+//repayments table goes here
+if (isset($_GET['table']) && $_GET['table'] == 'repayments') {
+    $offset = 0;
+    $limit = 10;
+    $where = '';
+    $sort = 'id';
+    $order = 'DESC';
+    if ((isset($_GET['user_id']) && $_GET['user_id'] != '')) {
+        $user_id = $db->escapeString($fn->xss_clean($_GET['user_id']));
+        $where .= "AND r.user_id = '$user_id'";
+    }
+      
+    if (isset($_GET['offset']))
+        $offset = $db->escapeString($fn->xss_clean($_GET['offset']));
+    if (isset($_GET['limit']))
+        $limit = $db->escapeString($fn->xss_clean($_GET['limit']));
+
+    if (isset($_GET['sort']))
+        $sort = $db->escapeString($fn->xss_clean($_GET['sort']));
+    if (isset($_GET['order']))
+        $order = $db->escapeString($fn->xss_clean($_GET['order']));
+
+    if (isset($_GET['search']) && !empty($_GET['search'])) {
+        $search = $db->escapeString($fn->xss_clean($_GET['search']));
+        $where .= "AND u.name like '%" . $search . "%' OR r.amount like '%" . $search . "%' OR r.id like '%" . $search . "%'  OR r.due_date like '%" . $search . "%' OR u.mobile like '%" . $search . "%' ";
+    }
+    if (isset($_GET['sort'])) {
+        $sort = $db->escapeString($_GET['sort']);
+    }
+    if (isset($_GET['order'])) {
+        $order = $db->escapeString($_GET['order']);
+    }
+    $join = "LEFT JOIN `users` u ON r.user_id = u.id WHERE r.id IS NOT NULL ";
+
+    $sql = "SELECT COUNT(r.id) as total FROM `repayments` r $join " . $where . "";
+    $db->sql($sql);
+    $res = $db->getResult();
+    foreach ($res as $row)
+        $total = $row['total'];
+
+    $sql = "SELECT r.id AS id,r.*,u.name,u.mobile,r.status AS status FROM `repayments` r $join 
+    $where ORDER BY $sort $order LIMIT $offset, $limit";
+     $db->sql($sql);
+    $res = $db->getResult();
+
+    $bulkData = array();
+    $bulkData['total'] = $total;
+    $rows = array();
+    $tempRow = array();
+    foreach ($res as $row) {
+        if($row['status']==0){
+            $checkbox = '<input type="checkbox" name="enable[]" value="'.$row['id'].'">';
+        }
+        else{
+            $checkbox = '';
+        }
+        $tempRow['id'] = $row['id'];
+        $tempRow['name'] = $row['name'];
+        $tempRow['mobile'] = $row['mobile'];
+        $tempRow['amount'] = $row['amount'];
+        $tempRow['due_date'] = $row['due_date'];
+        if($row['status']==1)
+              $tempRow['status']="<p class='text text-success'>Paid</p>";        
+       else
+             $tempRow['status']="<p class='text text-danger'>Unpaid</p>";
+        $tempRow['column'] = $checkbox;
+        $rows[] = $tempRow;
+    }
+    $bulkData['rows'] = $rows;
+    print_r(json_encode($bulkData));
+}
+
+//employees table goes here
+if (isset($_GET['table']) && $_GET['table'] == 'employees') {
+    $offset = 0;
+    $limit = 10;
+    $where = '';
+    $sort = 'id';
+    $order = 'DESC';
+    if (isset($_GET['offset']))
+        $offset = $db->escapeString($fn->xss_clean($_GET['offset']));
+    if (isset($_GET['limit']))
+        $limit = $db->escapeString($fn->xss_clean($_GET['limit']));
+
+    if (isset($_GET['sort']))
+        $sort = $db->escapeString($fn->xss_clean($_GET['sort']));
+    if (isset($_GET['order']))
+        $order = $db->escapeString($fn->xss_clean($_GET['order']));
+
+    if (isset($_GET['search']) && !empty($_GET['search'])) {
+        $search = $db->escapeString($fn->xss_clean($_GET['search']));
+        $where .= "WHERE name like '%" . $search . "%' OR id like '%" . $search . "%' OR mobile like '%" . $search . "%' OR email like '%" . $search . "%'";
+    }
+    if (isset($_GET['sort'])) {
+        $sort = $db->escapeString($_GET['sort']);
+    }
+    if (isset($_GET['order'])) {
+        $order = $db->escapeString($_GET['order']);
+    }
+    $sql = "SELECT COUNT(`id`) as total FROM `employees`" . $where;
+    $db->sql($sql);
+    $res = $db->getResult();
+    foreach ($res as $row)
+        $total = $row['total'];
+
+    $sql = "SELECT * FROM employees " . $where . " ORDER BY " . $sort . " " . $order . " LIMIT " . $offset . "," . $limit;
+    $db->sql($sql);
+    $res = $db->getResult();
+
+    $bulkData = array();
+    $bulkData['total'] = $total;
+    $rows = array();
+    $tempRow = array();
+    foreach ($res as $row) {
+        $operate = '<a href="edit-employee.php?id=' . $row['id'] . '" class="text text-primary"><i class="fa fa-edit"></i>Edit</a>';
+        $tempRow['id'] = $row['id'];
+        $tempRow['name'] = $row['name'];
+        $tempRow['mobile'] = $row['mobile'];
+        $tempRow['email'] = $row['email'];
+        $tempRow['password'] =$row['password'];
+        if($row['status']==1)
+            $tempRow['status']="<label class='label label-success'>Active</label>";        
+        else
+            $tempRow['status']="<label class='label label-danger'>Inactive</label>";
+        $tempRow['operate'] = $operate;
+        $rows[] = $tempRow;
+    }
+    $bulkData['rows'] = $rows;
+    print_r(json_encode($bulkData));
+}
+
+//faq table goes here
+if (isset($_GET['table']) && $_GET['table'] == 'faq') {
+    $offset = 0;
+    $limit = 10;
+    $where = '';
+    $sort = 'id';
+    $order = 'DESC';
+    if (isset($_GET['offset']))
+        $offset = $db->escapeString($fn->xss_clean($_GET['offset']));
+    if (isset($_GET['limit']))
+        $limit = $db->escapeString($fn->xss_clean($_GET['limit']));
+
+    if (isset($_GET['sort']))
+        $sort = $db->escapeString($fn->xss_clean($_GET['sort']));
+    if (isset($_GET['order']))
+        $order = $db->escapeString($fn->xss_clean($_GET['order']));
+
+    if (isset($_GET['search']) && !empty($_GET['search'])) {
+        $search = $db->escapeString($fn->xss_clean($_GET['search']));
+        $where .= "WHERE question like '%" . $search . "%' OR id like '%" . $search . "%' OR answer like '%" . $search . "%'";
+    }
+    if (isset($_GET['sort'])) {
+        $sort = $db->escapeString($_GET['sort']);
+    }
+    if (isset($_GET['order'])) {
+        $order = $db->escapeString($_GET['order']);
+    }
+    $sql = "SELECT COUNT(`id`) as total FROM `faq`" . $where;
+    $db->sql($sql);
+    $res = $db->getResult();
+    foreach ($res as $row)
+        $total = $row['total'];
+
+    $sql = "SELECT * FROM faq " . $where . " ORDER BY " . $sort . " " . $order . " LIMIT " . $offset . "," . $limit;
+    $db->sql($sql);
+    $res = $db->getResult();
+
+    $bulkData = array();
+    $bulkData['total'] = $total;
+    $rows = array();
+    $tempRow = array();
+    foreach ($res as $row) {
+        $operate = '<a href="edit-faq.php?id=' . $row['id'] . '" class="text text-primary"><i class="fa fa-edit"></i>Edit</a>';
+        $operate .= ' <a class="text text-danger" href="delete-faq.php?id=' . $row['id'] . '"><i class="fa fa-trash"></i>Delete</a>';
+        $tempRow['id'] = $row['id'];
+        $tempRow['question'] = $row['question'];
+        $tempRow['answer'] = $row['answer'];
+        $tempRow['operate'] = $operate;
+        $rows[] = $tempRow;
+    }
+    $bulkData['rows'] = $rows;
+    print_r(json_encode($bulkData));
+}
+
+if (isset($_GET['table']) && $_GET['table'] == 'system-users') {
+
+    $offset = 0;
+    $limit = 10;
+    $sort = 'id';
+    $order = 'ASC';
+    $where = '';
+    $condition = '';
+    if (isset($_GET['offset']))
+        $offset = $db->escapeString($fn->xss_clean($_GET['offset']));
+    if (isset($_GET['limit']))
+        $limit = $db->escapeString($fn->xss_clean($_GET['limit']));
+
+    if (isset($_GET['sort']))
+        $sort = $db->escapeString($fn->xss_clean($_GET['sort']));
+    if (isset($_GET['order']))
+        $order = $db->escapeString($fn->xss_clean($_GET['order']));
+
+    if (isset($_GET['search']) && $_GET['search'] != '') {
+        $search = $db->escapeString($fn->xss_clean($_GET['search']));
+        $where = " Where `id` like '%" . $search . "%' OR `username` like '%" . $search . "%' OR `email` like '%" . $search . "%' OR `role` like '%" . $search . "%' OR `date_created` like '%" . $search . "%'";
+    }
+    if ($_SESSION['role'] != 'Super Admin') {
+        if (empty($where)) {
+            $condition .= ' where created_by=' . $_SESSION['id'];
+        } else {
+            $condition .= ' and created_by=' . $_SESSION['id'];
+        }
+    }
+
+    $sql = "SELECT COUNT(id) as total FROM `admin`" . $where . "" . $condition;
+    $db->sql($sql);
+    $res = $db->getResult();
+    foreach ($res as $row)
+        $total = $row['total'];
+
+    $sql = "SELECT * FROM `admin`" . $where . "" . $condition . " ORDER BY " . $sort . " " . $order . " LIMIT " . $offset . ", " . $limit;
+    $db->sql($sql);
+    $res = $db->getResult();
+
+    $bulkData = array();
+    $bulkData['total'] = $total;
+    $rows = array();
+    $tempRow = array();
+
+    foreach ($res as $row) {
+        if ($row['created_by'] != 0) {
+            $sql = "SELECT username FROM admin WHERE id=" . $row['created_by'];
+            $db->sql($sql);
+            $created_by = $db->getResult();
+        }
+
+        if ($row['role'] != 'Super Admin') {
+            $operate = "<a class='btn btn-xs btn-primary edit-system-user' data-id='" . $row['id'] . "' data-toggle='modal' data-target='#editSystemUserModal' title='Edit'><i class='fa fa-pencil-square-o'></i></a>";
+            $operate .= " <a class='btn btn-xs btn-danger delete-system-user' data-id='" . $row['id'] . "' title='Delete'><i class='fa fa-trash-o'></i></a>";
+        } else {
+            $operate = '';
+        }
+        if ($row['role'] == 'Super Admin') {
+            $role = '<span class="label label-success">Super Admin</span>';
+        }
+        if ($row['role'] == 'Admin') {
+            $role = '<span class="label label-primary">Admin</span>';
+        }
+        if ($row['role'] == 'editor') {
+            $role = '<span class="label label-warning">Editor</span>';
+        }
+        $tempRow['id'] = $row['id'];
+        $tempRow['username'] = $row['username'];
+        $tempRow['email'] = $row['email'];
+        $tempRow['permissions'] = $row['permissions'];
+        $tempRow['role'] = $role;
+        $tempRow['created_by_id'] = $row['created_by'] != 0 ? $row['created_by'] : '-';
+        $tempRow['created_by'] = $row['created_by'] != 0 ? $created_by[0]['username'] : '-';
+        $tempRow['date_created'] = date('d-m-Y h:i:sa', strtotime($row['date_created']));
+        $tempRow['operate'] = $operate;
+
+        $rows[] = $tempRow;
+    }
+    $bulkData['rows'] = $rows;
+    print_r(json_encode($bulkData));
+}
+
 $db->disconnect();

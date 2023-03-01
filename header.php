@@ -236,22 +236,37 @@ $fn = new custom_functions;
                        <span>Notifications</span>
                     </a>
                 </li>
+                  
                 <li class="treeview">
-                    <a href="admins.php">
-                    <i class="fa fa-adn"></i>
-                    <span>Multiple Admin</span>
+                    <a href="#">
+                        <i class="fa fa-gear"></i>
+                        <span>Settings</span>
+                        <i class="fa fa-angle-right pull-right"></i>
+                    </a>
+                    <ul class="treeview-menu">
+                        <li><a href="settings.php"><i class="fa fa-gear"></i>Settings</a></li>
+                        <li><a href="code_settings.php"><i class="fa fa-gear"></i>Code Settings</a></li>
+                        <li><a href="champion_settings.php"><i class="fa fa-trophy"></i>Champion Settings</a></li>
+                        <li><a href="info_settings.php"><i class="fa fa-info"></i>Info Settings</a></li>
+
+                    </ul>
+                </li>
+                <li class="treeview">
+                    <a href="sa_transactions.php">
+                    <i class="fa fa-arrow-right"></i>
+                        <span>Salary Advance Transactions</span>
                     </a>
                 </li>
                 <li class="treeview">
-                    <a href="settings.php">
-                        <i class="fa fa-gear"></i>
-                        <span>Settings</span>  
+                    <a href="repayments.php">
+                    <i class="fa fa-money"></i>
+                        <span>Repayments</span>
                     </a>
                 </li>
                 <li class="treeview">
-                    <a href="code_settings.php">
-                        <i class="fa fa-gear"></i>
-                        <span>Code Settings</span>  
+                    <a href="app-update.php">
+                        <i class="fa fa-bullseye"></i>
+                        <span>App Update</span>
                     </a>
                 </li>
                 <li class="treeview">
@@ -267,9 +282,21 @@ $fn = new custom_functions;
                     </a>
                 </li>
                 <li class="treeview">
-                    <a href="app-update.php">
-                        <i class="fa fa-bullseye"></i>
-                        <span>App Update</span>
+                    <a href="employees.php">
+                        <i class="fa fa-user"></i>
+                        <span>Employees</span>
+                    </a>
+                </li>
+                <li class="treeview">
+                    <a href="faq.php">
+                        <i class="fa fa-info"></i>
+                         <span>FAQs</span>
+                    </a>
+                </li>
+                <li class="treeview">
+                    <a href="multiple-admins.php">
+                    <i class="fa fa-adn"></i>
+                    <span>Multiple Admin</span>
                     </a>
                 </li>
                 <?php

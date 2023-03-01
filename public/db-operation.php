@@ -244,3 +244,164 @@ if (isset($_POST['referred_by_code_change'])) {
     }
 
 }
+
+if (isset($_POST['system_configurations'])) {
+    $date = $db->escapeString(date('Y-m-d'));
+    $currency = empty($_POST['currency']) ? '₹' : $db->escapeString($fn->xss_clean($_POST['currency']));
+    $sql = "UPDATE `settings` SET `value`='" . $currency . "' WHERE `variable`='currency'";
+    $db->sql($sql);
+    $message = "<div class='alert alert-success'> Settings updated successfully!</div>";
+    $_POST['system_timezone_gmt'] = (trim($_POST['system_timezone_gmt']) == '00:00') ? "+" . trim($db->escapeString($fn->xss_clean($_POST['system_timezone_gmt']))) : $db->escapeString($fn->xss_clean($_POST['system_timezone_gmt']));
+
+    if (preg_match("/[a-z]/i", $db->escapeString($fn->xss_clean($_POST['current_version'])))) {
+        $_POST['current_version'] = 0;
+    }
+    if (preg_match("/[a-z]/i", $db->escapeString($fn->xss_clean($_POST['minimum_version_required'])))) {
+        $_POST['minimum_version_required'] = 0;
+    }
+    if (preg_match("/[a-z]/i", $db->escapeString($fn->xss_clean($_POST['delivery_charge'])))) {
+        $_POST['delivery_charge'] = 0;
+    }
+    if (preg_match("/[a-z]/i", $db->escapeString($fn->xss_clean($_POST['min-refer-earn-order-amount'])))) {
+        $_POST['min-refer-earn-order-amount'] = 0;
+    }
+    if (preg_match("/[a-z]/i", $db->escapeString($fn->xss_clean($_POST['min_amount'])))) {
+        $_POST['min_amount'] = 0;
+    }
+    if (preg_match("/[a-z]/i", $db->escapeString($fn->xss_clean($_POST['max-refer-earn-amount'])))) {
+        $_POST['max-refer-earn-amount'] = 0;
+    }
+    if (preg_match("/[a-z]/i", $db->escapeString($fn->xss_clean($_POST['minimum-withdrawal-amount'])))) {
+        $_POST['minimum-withdrawal-amount'] = 0;
+    }
+    if (preg_match("/[a-z]/i", $db->escapeString($fn->xss_clean($_POST['refer-earn-bonus'])))) {
+        $_POST['refer-earn-bonus'] = 0;
+    }
+    // if (preg_match("/[a-z]/i", $db->escapeString($fn->xss_clean($_POST['tax'])))) {
+    //     $_POST['tax'] = 0;
+    // }
+    $_POST['store_address'] = (!empty(trim($_POST['store_address']))) ? preg_replace("/[\r\n]{2,}/", "<br>", $_POST['store_address']) : "";
+
+    $settings_value = json_encode($fn->xss_clean_array($_POST));
+
+    $sql = "UPDATE ssystem_ettings SET value='" . $settings_value . "' WHERE variable='system_timezone'";
+    $db->sql($sql);
+    $res = $db->getResult();
+    $sql_logo = "select value from `ssystem_ettings` where variable='Logo' OR variable='logo'";
+    $db->sql($sql_logo);
+    $res_logo = $db->getResult();
+    $file_name = $_FILES['logo']['name'];
+
+    if (!empty($_FILES["logo"]["tmp_name"]) && $_FILES["logo"]["size"] > 0) {
+        $tmp = explode('.', $file_name);
+        $ext = end($tmp);
+        // $mimetype = mime_content_type($_FILES["logo"]["tmp_name"]);
+        // if (!in_array($mimetype, array('image/jpg', 'image/jpeg', 'image/gif', 'image/png'))) {
+        //     echo " <span class='label label-danger'>Logo Image type must jpg, jpeg, gif, or png!</span>";
+        //     return false;
+        // } else {
+        $result = $fn->validate_image($fn->xss_clean_array($_FILES["logo"]));
+        if (!$result) {
+            echo " <span class='label label-danger'>Logo Image type must jpg, jpeg, gif, or png!</span>";
+            return false;
+        } else {
+            $old_image = '../dist/img/' . $res_logo[0]['value'];
+            if (file_exists($old_image)) {
+                unlink($old_image);
+            }
+
+            $target_path = '../dist/img/';
+            $filename = "logo." . strtolower($ext);
+            $full_path = $target_path . '' . $filename;
+            if (!move_uploaded_file($_FILES["logo"]["tmp_name"], $full_path)) {
+                $message = "Image could not be uploaded<br/>";
+            } else {
+                //Update Logo - id = 5
+                $sql = "UPDATE `ssystem_ettings` SET `value`='" . $filename . "' WHERE `variable` = 'logo'";
+                $db->sql($sql);
+            }
+        }
+    }
+
+    echo "<p class='alert alert-success'>Settings Saved!</p>";
+}
+if (isset($_POST['add_system_user']) && $_POST['add_system_user'] == 1) {
+    $id = $_SESSION['id'];
+    $username = $db->escapeString($fn->xss_clean($_POST['username']));
+    $email = $db->escapeString($fn->xss_clean($_POST['email']));
+    if (empty($email)) {
+        echo " <label class='alert alert-danger'>Email required!</label>";
+        return false;
+    }
+    $valid_mail = "/^[_\.0-9a-zA-Z-]+@([0-9a-zA-Z][0-9a-zA-Z-]+\.)+[a-zA-Z]{2,6}$/i";
+    if (!preg_match($valid_mail, $email)) {
+        echo " <label class='alert alert-danger'>Wrong email format!</label>";
+        return false;
+    }
+
+    $password = $db->escapeString($fn->xss_clean($_POST['password']));
+    $role = $db->escapeString($fn->xss_clean($_POST['role']));
+
+
+    $sql = "SELECT id FROM admin WHERE username='" . $username . "'";
+    $db->sql($sql);
+    $res = $db->getResult();
+    $count = $db->numRows($res);
+    if ($count > 0) {
+        echo '<label class="alert alert-danger">Username Already Exists!</label>';
+        return false;
+    }
+
+    $sql = "SELECT id FROM admin WHERE email='" . $email . "'";
+    $db->sql($sql);
+    $res = $db->getResult();
+    $count = $db->numRows($res);
+    if ($count > 0) {
+        echo '<label class="alert alert-danger">Email Already Exists!</label>';
+        return false;
+    }
+    $permissions['user'] = array("create" => $db->escapeString($fn->xss_clean($_POST['is-create-user'])), "read" => $db->escapeString($fn->xss_clean($_POST['is-read-user'])), "update" => $db->escapeString($fn->xss_clean($_POST['is-update-user'])), "delete" => $db->escapeString($fn->xss_clean($_POST['is-delete-user'])));
+
+    $permissions['transaction'] = array("create" => $db->escapeString($fn->xss_clean($_POST['is-create-transaction'])), "read" => $db->escapeString($fn->xss_clean($_POST['is-read-transaction'])), "update" => $db->escapeString($fn->xss_clean($_POST['is-update-transaction'])), "delete" => $db->escapeString($fn->xss_clean($_POST['is-delete-transaction'])));
+
+    $permissions['withdrawal'] = array("create" => $db->escapeString($fn->xss_clean($_POST['is-create-withdrawal'])), "read" => $db->escapeString($fn->xss_clean($_POST['is-read-withdrawal'])), "update" => $db->escapeString($fn->xss_clean($_POST['is-update-withdrawal'])), "delete" => $db->escapeString($fn->xss_clean($_POST['is-delete-withdrawal'])));
+
+    
+
+    $encoded_permissions = json_encode($permissions);
+    $sql = "INSERT INTO admin (username,email,password,role,permissions,created_by)
+                        VALUES('$username', '$email', '$password', '$role','$encoded_permissions','$id')";
+    if ($db->sql($sql)) {
+        echo '<label class="alert alert-success">' . $role . ' Added Successfully!</label>';
+    } else {
+        echo '<label class="alert alert-danger">Some Error Occrred! please try again.</label>';
+    }
+}
+if (isset($_GET['delete_system_user']) && $_GET['delete_system_user'] == 1) {
+    $id = $db->escapeString($fn->xss_clean($_GET['id']));
+    $sql = "DELETE FROM `admin` WHERE id=" . $id;
+    if ($db->sql($sql)) {
+        echo 0;
+    } else {
+        echo 1;
+    }
+}
+if (isset($_POST['update_system_user']) && $_POST['update_system_user'] == 1) {
+  
+    $id = $db->escapeString($fn->xss_clean($_POST['system_user_id']));
+    $permissions['user'] = array("create" => $db->escapeString($fn->xss_clean($_POST['permission-is-create-user'])), "read" => $db->escapeString($fn->xss_clean($_POST['permission-is-read-user'])), "update" => $db->escapeString($fn->xss_clean($_POST['permission-is-update-user'])), "delete" => $db->escapeString($fn->xss_clean($_POST['permission-is-delete-user'])));
+
+    $permissions['transaction'] = array("create" => $db->escapeString($fn->xss_clean($_POST['permission-is-create-transaction'])), "read" => $db->escapeString($fn->xss_clean($_POST['permission-is-read-transaction'])), "update" => $db->escapeString($fn->xss_clean($_POST['permission-is-update-transaction'])), "delete" => $db->escapeString($fn->xss_clean($_POST['permission-is-delete-transaction'])));
+
+    $permissions['withdrawal'] = array("create" => $db->escapeString($fn->xss_clean($_POST['permission-is-create-withdrawal'])), "read" => $db->escapeString($fn->xss_clean($_POST['permission-is-read-withdrawal'])), "update" => $db->escapeString($fn->xss_clean($_POST['permission-is-update-withdrawal'])), "delete" => $db->escapeString($fn->xss_clean($_POST['permission-is-delete-withdrawal'])));
+
+   
+
+    $permissions = json_encode($permissions);
+    $sql = "UPDATE admin SET permissions='" . $permissions . "' WHERE id=" . $id;
+    if ($db->sql($sql)) {
+        echo '<label class="alert alert-success">Updated Successfully!</label>';
+    } else {
+        echo '<label class="alert alert-danger">Some Error Occrred! please try again.</label>';
+    }
+}
