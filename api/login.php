@@ -68,7 +68,7 @@ if ($num == 1) {
    
    
         $status = $res[0]['status'];
-        if ($status == 1) {
+        if ($status == 1 || $status == 0) {
             $sql = "SELECT * FROM settings";
             $db->sql($sql);
             $setres = $db->getResult();
@@ -93,12 +93,13 @@ if ($num == 1) {
                 $response['message'] = "Please Login With your Device";
                 print_r(json_encode($response));
             }
-        } else if ($status == 0) {
-            $response['success'] = true;
-            $response['user_verify'] = false;
-            $response['message'] = "Your Account is not verified, Please Contact Admin";
-            print_r(json_encode($response));
-        } else {
+        // } else if ($status == 0) {
+        //     $response['success'] = true;
+        //     $response['user_verify'] = false;
+        //     $response['message'] = "Your Account is not verified, Please Contact Admin";
+        //     print_r(json_encode($response));
+        // } 
+        }else {
             $response['success'] = true;
             $response['user_verify'] = false;
             $response['message'] = "You are Blocked Please Contact Admin";
