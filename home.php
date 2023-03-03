@@ -71,11 +71,11 @@ include "header.php";
                         <div class="inner">
                         <h3><?php
                             if($_SESSION['role'] == 'Super Admin'){
-                                $join = "WHERE status=1";
+                                $join = "WHERE status=1 AND code_generate = 1 AND today_codes != 0";
                             }
                             else{
                                 $refer_code = $_SESSION['refer_code'];
-                                $join = "WHERE status=1 AND refer_code REGEXP '^$refer_code'";
+                                $join = "WHERE status=1 AND code_generate = 1 AND refer_code REGEXP '^$refer_code' AND today_codes != 0 ";
                             }
                             $sql = "SELECT * FROM users $join";
                             $db->sql($sql);

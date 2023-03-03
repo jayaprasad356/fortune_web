@@ -37,6 +37,7 @@ if($user_id != ''){
     $history_days = $res[0]['history_days'];
     $device_id = $res[0]['device_id'];
     $today_codes = $res[0]['today_codes'];
+    $user_code_generate_time = $res[0]['code_generate_time'];
    
 
     if(!empty($fcm_id)){
@@ -55,16 +56,20 @@ if($user_id != ''){
         $db->sql($sql);
 
     }
-
-    if(($history_days >= $min_days) && ($today_codes > $min_codes)){
-        $sql = "UPDATE `users` SET  `code_generate_time` = '$code_gererate_time' WHERE `id` = $user_id";
-        $db->sql($sql);
-
-    }else{
-        $sql = "UPDATE `users` SET  `code_generate_time` =3 WHERE `id` = $user_id";
-        $db->sql($sql);
+    if($user_code_generate_time < $code_gererate_time){
+        if(($history_days >= $min_days) && ($today_codes > $min_codes)){
+            $sql = "UPDATE `users` SET  `code_generate_time` = '$code_gererate_time' WHERE `id` = $user_id";
+            $db->sql($sql);
+    
+        }else{
+            $sql = "UPDATE `users` SET  `code_generate_time` =3 WHERE `id` = $user_id";
+            $db->sql($sql);
+    
+        }
 
     }
+
+
 
     $days = $res[0]['days'];
     if($days != 0){
