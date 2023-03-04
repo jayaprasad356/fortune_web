@@ -8,6 +8,7 @@ define('COST_PER_CODE', 0.17);
 define('VALID_DAYS', 50);
 define('REFER_BONUS', 500);
 define('MAIN_REFER', 'YMS');
+define('REFER_COST_PER_CODE', 0.01);
 class Database
 {
 

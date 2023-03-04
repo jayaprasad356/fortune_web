@@ -46,12 +46,12 @@ if (isset($_POST['btnEdit'])) {
             $ad_status = $db->escapeString(($_POST['ad_status']));
             $error = array();
 
-     if (!empty($name) && !empty($mobile) && !empty($password)&& !empty($dob) && !empty($email)&& !empty($city) && !empty($code_generate_time)) {
-
+     if (!empty($name) && !empty($mobile) && !empty($password)&& !empty($dob) && !empty($email) && !empty($city) && !empty($code_generate_time)) {
+         
         if($status == 1 && !empty($referred_by) && $refer_bonus_sent != 1){
             $refer_bonus_codes = $function->getSettingsVal('refer_bonus_codes');
             $code_bonus =  $refer_bonus_codes * COST_PER_CODE;
-            $referral_bonus = REFER_BONUS;
+            $referral_bonus = 250;
             $sql_query = "SELECT * FROM users WHERE refer_code =  '$referred_by'";
             $db->sql($sql_query);
             $res = $db->getResult();
