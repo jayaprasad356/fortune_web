@@ -65,16 +65,18 @@ if($user_id != ''){
 
     }
 
-    if(($history_days >= $min_days) && ($today_codes > $min_codes)){
-        $sql = "UPDATE `users` SET  `code_generate_time` = '$code_gererate_time' WHERE `id` = $user_id";
-        $db->sql($sql);
-
-    }else{
-        $sql = "UPDATE `users` SET  `code_generate_time` =3 WHERE `id` = $user_id";
-        $db->sql($sql);
+    if($user_code_generate_time < $code_gererate_time){
+        if(($history_days >= $min_days) && ($today_codes > $min_codes)){
+            $sql = "UPDATE `users` SET  `code_generate_time` = '$code_gererate_time' WHERE `id` = $user_id";
+            $db->sql($sql);
+    
+        }else{
+            $sql = "UPDATE `users` SET  `code_generate_time` =3 WHERE `id` = $user_id";
+            $db->sql($sql);
+    
+        }
 
     }
-
     $days = $res[0]['days'];
     if($days != 0){
         $sql = "UPDATE `users` SET  `today_codes` = 0,`last_updated` = '$datetime' WHERE `id` = $user_id";
