@@ -65,7 +65,7 @@ class custom_functions
     }
     public function get_configurations()
     {
-        $sql = "SELECT value FROM settings WHERE `variable`='system_timezone'";
+        $sql = "SELECT value FROM system_settings WHERE `variable`='system_timezone'";
         $this->db->sql($sql);
         $res = $this->db->getResult();
         if (!empty($res)) {
@@ -146,6 +146,28 @@ class custom_functions
 
         }
 
+    }
+    public function get_role($id)
+    {
+        $sql = "SELECT role FROM admin WHERE id=" . $id;
+        $this->db->sql($sql);
+        $res = $this->db->getResult();
+        if (!empty($res) && isset($res[0]['role'])) {
+            return $res[0]['role'];
+        } else {
+            return 0;
+        }
+    }
+    public function get_permissions($id)
+    {
+        $sql = "SELECT permissions FROM admin WHERE id=" . $id;
+        $this->db->sql($sql);
+        $res = $this->db->getResult();
+        if (!empty($res) && isset($res[0]['permissions'])) {
+            return json_decode($res[0]['permissions'], true);
+        } else {
+            return 0;
+        }
     }
 
 }

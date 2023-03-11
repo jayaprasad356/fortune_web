@@ -39,48 +39,60 @@ if (isset($_POST['btnEdit'])) {
             $balance = (isset($_POST['balance']) && !empty($_POST['balance'])) ? $db->escapeString($_POST['balance']) : "0";
             $today_codes = (isset($_POST['today_codes']) && !empty($_POST['today_codes'])) ? $db->escapeString($_POST['today_codes']) : 0;
             $total_codes = (isset($_POST['total_codes']) && !empty($_POST['total_codes'])) ? $db->escapeString($_POST['total_codes']) : 0;
+
+            $task_type = $db->escapeString(($_POST['task_type']));
+            $champion_task_eligible = $db->escapeString(($_POST['champion_task_eligible']));
+            $mcg_timer = $db->escapeString(($_POST['mcg_timer']));
+            $ad_status = $db->escapeString(($_POST['ad_status']));
             $error = array();
 
-     if (!empty($name) && !empty($mobile) && !empty($password)&& !empty($dob) && !empty($email)&& !empty($city) && !empty($code_generate_time)) {
-
+     if (!empty($name) && !empty($mobile) && !empty($password)&& !empty($dob) && !empty($email) && !empty($city) && !empty($code_generate_time)) {
+         
         if($status == 1 && !empty($referred_by) && $refer_bonus_sent != 1){
-            $code_bonus = 1000 * COST_PER_CODE;
-            $referral_bonus = REFER_BONUS;
-            $sql_query = "UPDATE users SET `total_referrals` = total_referrals + 1,`earn` = earn + $referral_bonus,`balance` = balance + $referral_bonus WHERE refer_code =  '$referred_by' AND status = 1";
+            $refer_bonus_codes = $function->getSettingsVal('refer_bonus_codes');
+            $code_bonus =  $refer_bonus_codes * COST_PER_CODE;
+            $referral_bonus = 250;
+            $sql_query = "SELECT * FROM users WHERE refer_code =  '$referred_by'";
             $db->sql($sql_query);
             $res = $db->getResult();
-            if (empty($res)) {
-
-                $sql_query = "SELECT * FROM users WHERE refer_code =  '$referred_by'";
-                $db->sql($sql_query);
-                $res = $db->getResult();
-
-                $num = $db->numRows($res);
-                if ($num == 1){
-                    $user_id = $res[0]['id'];
-                    $sql_query = "INSERT INTO transactions (user_id,amount,datetime,type)VALUES($user_id,$referral_bonus,'$datetime','refer_bonus')";
-                    $db->sql($sql_query);
-                    $code_generate = $res[0]['code_generate'];
-                    if($code_generate == 1){
-                        $sql_query = "UPDATE users SET `earn` = earn + $code_bonus,`balance` = balance + $code_bonus,`today_codes` = today_codes + 1000,`total_codes` = total_codes + 1000 WHERE refer_code =  '$referred_by' AND code_generate = 1";
-                        $db->sql($sql_query);
-                        $sql_query = "INSERT INTO transactions (user_id,amount,codes,datetime,type)VALUES($user_id,$code_bonus,1000,'$datetime','code_bonus')";
-                        $db->sql($sql_query);
-                    }
-                    $sql_query = "UPDATE users SET refer_bonus_sent = 1 WHERE id =  $ID";
-                    $db->sql($sql_query);
+            $num = $db->numRows($res);
+            if ($num == 1){
+                $user_id = $res[0]['id'];
+                $code_generate = $res[0]['code_generate'];
+                $ref_user_status = $res[0]['status'];
+                if($ref_user_status == 1){
+                    $referral_bonus = $function->getSettingsVal('refer_bonus_amount');
 
                 }
 
+                $sa_refer_count=$res[0]['sa_refer_count'];
+                $salary_advance_balance=200;
+
+
+                $sql_query = "UPDATE users SET `total_referrals` = total_referrals + 1,`earn` = earn + $referral_bonus,`balance` = balance + $referral_bonus,`salary_advance_balance`=salary_advance_balance +$salary_advance_balance,`sa_refer_count`=sa_refer_count + 1  WHERE id =  $user_id";
+                $db->sql($sql_query);
+                $sql_query = "INSERT INTO transactions (user_id,amount,datetime,type)VALUES($user_id,$referral_bonus,'$datetime','refer_bonus')";
+                $db->sql($sql_query);
+                $sql_query = "INSERT INTO salary_advance_trans (user_id,refer_user_id,amount,datetime,type)VALUES($ID,$user_id,'$salary_advance_balance','$datetime','credit')";
+                $db->sql($sql_query);
+                if($ref_user_status == 1){
+                    $sql_query = "UPDATE users SET `earn` = earn + $code_bonus,`balance` = balance + $code_bonus,`today_codes` = today_codes + $refer_bonus_codes,`total_codes` = total_codes + $refer_bonus_codes WHERE refer_code =  '$referred_by' AND status = 1";
+                    $db->sql($sql_query);
+                    $sql_query = "INSERT INTO transactions (user_id,amount,codes,datetime,type)VALUES($user_id,$code_bonus,$refer_bonus_codes,'$datetime','code_bonus')";
+                    $db->sql($sql_query);
+                }
+                $sql_query = "UPDATE users SET refer_bonus_sent = 1 WHERE id =  $ID";
+                $db->sql($sql_query);
 
             }
 
 
         }
         if($status == 1 && $register_bonus_sent != 1){
-            $register_bonus = 1000 * COST_PER_CODE;
-            $total_codes = $total_codes + 1000;
-            $today_codes = $today_codes + 1000;
+            $join_codes = 1000;
+            $register_bonus = $join_codes * COST_PER_CODE;
+            $total_codes = $total_codes +  $join_codes;
+            $today_codes = $today_codes +  $join_codes;
             $earn = $earn + $register_bonus;
             $balance = $balance + $register_bonus;
             $sql_query = "UPDATE users SET register_bonus_sent = 1 WHERE id =  $ID";
@@ -90,7 +102,7 @@ if (isset($_POST['btnEdit'])) {
             
         }
     
-        $sql_query = "UPDATE users SET name='$name', mobile='$mobile', password='$password', dob='$dob', email='$email', city='$city', refer_code='$refer_code', referred_by='$referred_by', earn='$earn', total_referrals='$total_referrals', balance='$balance', withdrawal_status=$withdrawal_status,total_codes=$total_codes, today_codes=$today_codes,device_id='$device_id',status = $status,code_generate = $code_generate,code_generate_time = $code_generate_time,joined_date = '$joined_date',security='$security' WHERE id =  $ID";
+        $sql_query = "UPDATE users SET name='$name', mobile='$mobile', password='$password', dob='$dob', email='$email', city='$city', refer_code='$refer_code', referred_by='$referred_by', earn='$earn', total_referrals='$total_referrals', balance='$balance', withdrawal_status=$withdrawal_status,total_codes=$total_codes, today_codes=$today_codes,device_id='$device_id',status = $status,code_generate = $code_generate,code_generate_time = $code_generate_time,joined_date = '$joined_date',task_type='$task_type',champion_task_eligible='$champion_task_eligible',mcg_timer='$mcg_timer',ad_status='$ad_status',security='$security'WHERE id =  $ID";
         $db->sql($sql_query);
         $update_result = $db->getResult();
         if (!empty($update_result)) {
@@ -108,6 +120,7 @@ if (isset($_POST['btnEdit'])) {
 
 
     }
+ 
 }
 
 
@@ -267,15 +280,50 @@ if (isset($_POST['btnCancel'])) { ?>
                                     <input type="hidden" id="withdrawal_status" name="withdrawal_status" value="<?= isset($res[0]['withdrawal_status']) && $res[0]['withdrawal_status'] == 1 ? 1 : 0 ?>">
                                 </div>
                             </div>
+                            <div class="form-group col-md-4">
+                                    <label class="control-label">Task Type</label><i class="text-danger asterik">*</i><br>
+                                    <div id="task_type" class="btn-group">
+                                        <label class="btn btn-primary" data-toggle-class="btn-primary" data-toggle-passive-class="btn-default">
+                                            <input type="radio" name="task_type" value="regular" <?= ($res[0]['task_type'] == 'regular') ? 'checked' : ''; ?>> Regular
+                                        </label>
+                                        <label class="btn btn-info" data-toggle-class="btn-default" data-toggle-passive-class="btn-default">
+                                            <input type="radio" name="task_type" value="champion" <?= ($res[0]['task_type'] == 'champion') ? 'checked' : ''; ?>> Champion
+                                        </label>
+                                    </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label for="">Champion Task Eligible</label><br>
+                                    <input type="checkbox" id="eligible_button" class="js-switch" <?= isset($res[0]['champion_task_eligible']) && $res[0]['champion_task_eligible'] == 1 ? 'checked' : '' ?>>
+                                    <input type="hidden" id="champion_task_eligible" name="champion_task_eligible" value="<?= isset($res[0]['champion_task_eligible']) && $res[0]['champion_task_eligible'] == 1 ? 1 : 0 ?>">
+                                </div>
+                            </div>
+                        </div>
+                        <br>
+                        <div class="row">
+                                <div class="col-md-3">
+                                    <label for="exampleInputEmail1">MCG Timer</label><i class="text-danger asterik">*</i>
+                                    <input type="number" class="form-control" name="mcg_timer" value="<?php echo $res[0]['mcg_timer']; ?>">
+                                </div>
+                                <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label for="">Ad Status</label><br>
+                                            <input type="checkbox" id="ad_button" class="js-switch" <?= isset($res[0]['ad_status']) && $res[0]['ad_status'] == 1 ? 'checked' : '' ?>>
+                                            <input type="hidden" id="ad_status" name="ad_status" value="<?= isset($res[0]['ad_status']) && $res[0]['ad_status'] == 1 ? 1 : 0 ?>">
+                                        </div>
+                                 </div>
+                        </div>
+                        <br>
+                        <div class="row">
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label for="">Security</label><br>
                                     <input type="checkbox" id="security_button" class="js-switch" <?= isset($res[0]['security']) && $res[0]['security'] == 1 ? 'checked' : '' ?>>
                                     <input type="hidden" id="security" name="security" value="<?= isset($res[0]['security']) && $res[0]['security'] == 1 ? 1 : 0 ?>">
-                                </div>
-                                
+                                </div>      
                             </div>
                         </div>
+                        <br>
                         <div class="row">
 									<div class="form-group col-md-12">
 										<label class="control-label">Status</label><i class="text-danger asterik">*</i><br>
@@ -343,6 +391,30 @@ if (isset($_POST['btnCancel'])) { ?>
 
         } else {
             $('#security').val(0);
+        }
+    };
+</script>
+<script>
+    var changeCheckbox = document.querySelector('#eligible_button');
+    var init = new Switchery(changeCheckbox);
+    changeCheckbox.onchange = function() {
+        if ($(this).is(':checked')) {
+            $('#champion_task_eligible').val(1);
+
+        } else {
+            $('#champion_task_eligible').val(0);
+        }
+    };
+</script>
+<script>
+    var changeCheckbox = document.querySelector('#ad_button');
+    var init = new Switchery(changeCheckbox);
+    changeCheckbox.onchange = function() {
+        if ($(this).is(':checked')) {
+            $('#ad_status').val(1);
+
+        } else {
+            $('#ad_status').val(0);
         }
     };
 </script>

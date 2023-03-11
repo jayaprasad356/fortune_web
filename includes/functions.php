@@ -336,4 +336,11 @@ class functions
         }
         return $token;
     }
+    public function getSettingsVal($col)
+    {
+        $sql = "SELECT $col FROM settings";
+        $this->db->sql($sql);
+        $res = $this->db->getResult();
+        return $res[0][$col];
+    }
 }
