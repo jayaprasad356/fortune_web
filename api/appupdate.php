@@ -75,6 +75,7 @@ if($user_id != ''){
             $db->sql($sql);
     
         }
+    }
 
     $days = $res[0]['days'];
     if($days != 0){
