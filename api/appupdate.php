@@ -39,7 +39,8 @@ if($user_id != ''){
     $device_id = $res[0]['device_id'];
     $today_codes = $res[0]['today_codes'];
     $task_type = $res[0]['task_type'];
-    $code_generate_time = $res[0]['code_generate_time'];
+    
+    $user_code_generate_time = $res[0]['code_generate_time'];
    
     $champion_task = $set[0]['champion_task'];
 
@@ -64,7 +65,6 @@ if($user_id != ''){
         $db->sql($sql);
 
     }
-
     if($user_code_generate_time < $code_gererate_time){
         if(($history_days >= $min_days) && ($today_codes > $min_codes)){
             $sql = "UPDATE `users` SET  `code_generate_time` = '$code_gererate_time' WHERE `id` = $user_id";
@@ -76,7 +76,6 @@ if($user_id != ''){
     
         }
 
-    }
     $days = $res[0]['days'];
     if($days != 0){
         $sql = "UPDATE `users` SET  `today_codes` = 0,`last_updated` = '$datetime' WHERE `id` = $user_id";
