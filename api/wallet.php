@@ -58,7 +58,7 @@ if($code_generate == 1){
         
             $sql = "UPDATE `users` SET  `today_codes` = today_codes + $codes,`total_codes` = total_codes + $codes,`earn` = earn + $amount,`balance` = balance + $amount,`last_updated` = '$datetime' WHERE `id` = $user_id";
             $db->sql($sql);
-            $mentiondate = '2023-02-05';
+            $mentiondate = '2023-03-13';
     
             $sql = "SELECT referred_by  FROM users WHERE id = $user_id AND `joined_date` >= '$mentiondate' AND status = 1";
             $db->sql($sql);
