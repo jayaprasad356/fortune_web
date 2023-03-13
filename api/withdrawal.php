@@ -55,7 +55,7 @@ $db->sql($sql);
 $res = $db->getResult();
 $num = $db->numRows($res);
 if($withdrawal_status == 1 &&  $main_ws == 1 ){
-    if ($num >= 1) {
+    if (($type == 'bank_transfer' && $num >= 1) || $type == 'cash_payment') {
         if($amount >= $min_withdrawal){
                 if($balance >= $amount){
                     $sql = "UPDATE `users` SET `balance` = balance - $amount,`withdrawal` = withdrawal + $amount WHERE `id` = $user_id";
