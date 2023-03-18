@@ -2,9 +2,16 @@
 include_once('includes/crud.php');
 $db = new Database();
 $db->connect();
+$sql_query = "SELECT t.codes,t.amount,t.datetime,u.mobile,u.name,u.joined_date  FROM transactions t,users u WHERE t.user_id = u.id";
+	
+if (isset($_GET['id'])) {
+	$ID = $db->escapeString($_GET['id']);
+	$sql_query = "SELECT t.codes,t.amount,t.datetime,u.mobile,u.name,u.joined_date  FROM transactions t,users u WHERE t.user_id = u.id AND t.user_id= ".$ID;
+	
+    
+} 
 
 
-	$sql_query = "SELECT t.codes,t.amount,t.datetime,u.mobile,u.name,u.joined_date  FROM transactions t,users u WHERE t.user_id = u.id";
 	$db->sql($sql_query);
 	$developer_records = $db->getResult();
 	
