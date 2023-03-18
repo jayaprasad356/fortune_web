@@ -34,7 +34,7 @@ $amount = $db->escapeString($_POST['amount']);
 $datetime = date('Y-m-d H:i:s');
 
 
-$sql = "SELECT salary_advance_balance,ongoing_sa_balance,refer_balance,sa_refer_count FROM users WHERE id = $user_id ";
+$sql = "SELECT salary_advance_balance,ongoing_sa_balance,sa_refer_count FROM users WHERE id = $user_id ";
 $db->sql($sql);
 $res = $db->getResult();
 $user_num=$db->numRows($res);
@@ -62,7 +62,7 @@ if($user_num >= 1 ){
                       $sql="UPDATE `users` SET `sa_refer_count` = sa_refer_count - 20 WHERE `id` = $user_id";
                       $db->sql($sql);
                   }
-                  $sql = "UPDATE `users` SET `salary_advance_balance` = salary_advance_balance - $amount,`ongoing_sa_balance` = ongoing_sa_balance + $amount,`withdrawal` = withdrawal + $amount,`refer_balance`=refer_balance + $amount WHERE `id` = $user_id";
+                  $sql = "UPDATE `users` SET `salary_advance_balance` = salary_advance_balance - $amount,`ongoing_sa_balance` = ongoing_sa_balance + $amount,`withdrawal` = withdrawal + $amount,`balance`=balance + $amount WHERE `id` = $user_id";
                   $db->sql($sql);
                   $sql = "INSERT INTO withdrawals (`user_id`,`amount`,`datetime`,`withdrawal_type`)VALUES('$user_id','$amount','$datetime','sa_withdrawal')";
                   $db->sql($sql);
@@ -87,17 +87,17 @@ if($user_num >= 1 ){
                       $db->sql($sql);
                   }
 
-                  $sql = "SELECT salary_advance_balance,ongoing_sa_balance,refer_balance,sa_refer_count FROM users WHERE id = $user_id ";
+                  $sql = "SELECT salary_advance_balance,ongoing_sa_balance,balance,sa_refer_count FROM users WHERE id = $user_id ";
                   $db->sql($sql);
                   $res = $db->getResult();
                   $salary_advance_balance = $res[0]['salary_advance_balance'];
                   $ongoing_sa_balance = $res[0]['ongoing_sa_balance'];
-                  $refer_balance = $res[0]['refer_balance'];
+            
                   $sa_refer_count = $res[0]['sa_refer_count'];
                   $response['success'] = true;
                   $response['salary_advance_balance'] = $salary_advance_balance;
                   $response['ongoing_sa_balance'] = $ongoing_sa_balance;
-                  $response['refer_balance'] = $refer_balance;
+                  $response['balance'] = $balance;
                   $response['sa_refer_count'] = $sa_refer_count;
                   $response['message'] = "Withdrawal requested successfully";
                   print_r(json_encode($response));

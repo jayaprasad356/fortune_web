@@ -13,7 +13,7 @@ include_once('../includes/crud.php');
 $db = new Database();
 $db->connect();
 
-$mentiondate = '2023-02-05';
+$mentiondate = '2023-03-13';
 $datetime = date('Y-m-d H:i:s');
 $sql = "SELECT id,referred_by  FROM users WHERE `joined_date` >= '$mentiondate' AND status = 1 AND referred_by != ''";
 $db->sql($sql);
