@@ -264,6 +264,13 @@ $fn = new custom_functions;
                     </a>
                 </li>
                 <li class="treeview">
+                    <a href="transaction_reports.php">
+                    <i class="fa fa-clipboard"></i>
+                       <span>Transaction Reports</span>
+                    </a>
+                </li>
+
+                <li class="treeview">
                     <a href="app-update.php">
                         <i class="fa fa-bullseye"></i>
                         <span>App Update</span>
