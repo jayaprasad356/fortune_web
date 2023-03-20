@@ -329,6 +329,7 @@ if (isset($_POST['add_system_user']) && $_POST['add_system_user'] == 1) {
     $id = $_SESSION['id'];
     $username = $db->escapeString($fn->xss_clean($_POST['username']));
     $email = $db->escapeString($fn->xss_clean($_POST['email']));
+    $refer_code = $db->escapeString($fn->xss_clean($_POST['refer_code']));
     if (empty($email)) {
         echo " <label class='alert alert-danger'>Email required!</label>";
         return false;
@@ -369,8 +370,8 @@ if (isset($_POST['add_system_user']) && $_POST['add_system_user'] == 1) {
     
 
     $encoded_permissions = json_encode($permissions);
-    $sql = "INSERT INTO admin (username,email,password,role,permissions,created_by)
-                        VALUES('$username', '$email', '$password', '$role','$encoded_permissions','$id')";
+    $sql = "INSERT INTO admin (username,email,refer_code,password,role,permissions,created_by)
+                        VALUES('$username', '$email', '$refer_code','$password', '$role','$encoded_permissions','$id')";
     if ($db->sql($sql)) {
         echo '<label class="alert alert-success">' . $role . ' Added Successfully!</label>';
     } else {

@@ -65,6 +65,10 @@ if ($_SESSION['role'] == 'editor') {
                             <input type="text" class="form-control" name="email">
                         </div>
                         <div class="form-group">
+                            <label for="">Refer Code</label>
+                            <input type="text" class="form-control" name="refer_code">
+                        </div>
+                        <div class="form-group">
                             <label for="">Password</label>
                             <input type="password" class="form-control" name="password" id="password">
                         </div>
@@ -108,6 +112,7 @@ if ($_SESSION['role'] == 'editor') {
                                     <th data-field="id" data-sortable="true">ID</th>
                                     <th data-field="username" data-sortable="true">Username</th>
                                     <th data-field="email" data-sortable="true">Email</th>
+                                    <th data-field="refer_code" data-sortable="true">Refer Code</th>
                                     <th data-field="role" data-sortable="true">Role</th>
                                     <th data-field="created_by" data-sortable="true" data-visible="false">Created By</th>
                                     <th data-field="created_by_id" data-sortable="true" data-visible="false">Created By Id</th>
