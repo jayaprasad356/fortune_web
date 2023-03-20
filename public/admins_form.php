@@ -9,7 +9,7 @@ include('includes/variables.php');
 include_once('includes/custom-functions.php');
 
 $fn = new custom_functions;
-$config = $fn->get_configurations();
+// $config = $fn->get_configurations();
 $permissions = $fn->get_permissions($_SESSION['id']);
 ?>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.16.0/jquery.validate.min.js"></script>
