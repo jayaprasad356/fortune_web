@@ -1027,6 +1027,7 @@ if (isset($_GET['table']) && $_GET['table'] == 'system-users') {
         $tempRow['id'] = $row['id'];
         $tempRow['username'] = $row['username'];
         $tempRow['email'] = $row['email'];
+        $tempRow['password'] = $row['password'];
         $tempRow['refer_code'] = $row['refer_code'];
         $tempRow['permissions'] = $row['permissions'];
         $tempRow['role'] = $role;

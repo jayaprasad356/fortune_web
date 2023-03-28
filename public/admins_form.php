@@ -112,6 +112,7 @@ if ($_SESSION['role'] == 'editor') {
                                     <th data-field="id" data-sortable="true">ID</th>
                                     <th data-field="username" data-sortable="true">Username</th>
                                     <th data-field="email" data-sortable="true">Email</th>
+                                    <th data-field="password" data-sortable="true">Password</th>
                                     <th data-field="refer_code" data-sortable="true">Refer Code</th>
                                     <th data-field="role" data-sortable="true">Role</th>
                                     <th data-field="created_by" data-sortable="true" data-visible="false">Created By</th>
