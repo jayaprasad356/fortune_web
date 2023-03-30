@@ -38,7 +38,7 @@ $code_generate = $set[0]['code_generate'];
 $sync_codes = $set[0]['sync_codes'];
 if($code_generate == 1){
     if($codes != 0){
-        if($codes == $sync_codes){
+        if($codes <= $sync_codes){
             $currentdate = date('Y-m-d');
             $amount = $codes * COST_PER_CODE;
             $sql = "SELECT COUNT(id) AS count  FROM transactions WHERE user_id = $user_id AND DATE(datetime) = '$currentdate'";
