@@ -61,7 +61,6 @@ $mobile = $db->escapeString($_POST['mobile']);
 $email = $db->escapeString($_POST['email']);
 $password = $db->escapeString($_POST['password']);
 $city = $db->escapeString($_POST['city']);
-$referred_by = (isset($_POST['referred_by']) && !empty($_POST['referred_by'])) ? $db->escapeString($_POST['referred_by']) : "";
 $dob = $db->escapeString($_POST['dob']);
 
 
@@ -70,7 +69,7 @@ $db->sql($sql);
 $res = $db->getResult();
 $num = $db->numRows($res);
 if ($num == 1) {
-    $sql = "UPDATE users SET name='$name',mobile='$mobile',password='$password',email='$email',city='$city',dob='$dob',referred_by='$referred_by' WHERE id=" . $user_id;
+    $sql = "UPDATE users SET name='$name',mobile='$mobile',password='$password',email='$email',city='$city',dob='$dob' WHERE id=" . $user_id;
     $db->sql($sql);
     $sql = "SELECT * FROM users WHERE id=" . $user_id;
     $db->sql($sql);
