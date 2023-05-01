@@ -62,7 +62,7 @@ if($user_num >= 1 ){
                       $sql="UPDATE `users` SET `sa_refer_count` = sa_refer_count - 20 WHERE `id` = $user_id";
                       $db->sql($sql);
                   }
-                  $sql = "UPDATE `users` SET `salary_advance_balance` = salary_advance_balance - $amount,`ongoing_sa_balance` = ongoing_sa_balance + $amount,`withdrawal` = withdrawal + $amount,`balance`=balance + $amount WHERE `id` = $user_id";
+                  $sql = "UPDATE `users` SET `salary_advance_balance` = salary_advance_balance - $amount,`ongoing_sa_balance` = ongoing_sa_balance + $amount,`withdrawal` = withdrawal + $amount WHERE `id` = $user_id";
                   $db->sql($sql);
                   $sql = "INSERT INTO withdrawals (`user_id`,`amount`,`datetime`,`withdrawal_type`)VALUES('$user_id','$amount','$datetime','sa_withdrawal')";
                   $db->sql($sql);
