@@ -188,6 +188,12 @@ $fn = new custom_functions;
                         <span> Referal Bonus</span>
                     </a>
                 </li>
+                <li class="treeview">
+                    <a href="withdrawals.php">
+                    <i class="fa fa-money"></i>
+                        <span>Withdrawals</span>
+                    </a>
+                </li>
 
 
                 <?php
@@ -205,12 +211,7 @@ $fn = new custom_functions;
                         <span>Bank Details</span>
                     </a>
                 </li>
-                <li class="treeview">
-                    <a href="withdrawals.php">
-                    <i class="fa fa-money"></i>
-                        <span>Withdrawals</span>
-                    </a>
-                </li>
+
                 <li class="treeview">
                     <a href="search_withdrawals.php">
                     <i class="fa fa-search"></i>
