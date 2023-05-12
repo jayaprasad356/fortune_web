@@ -236,8 +236,15 @@ if (isset($_GET['table']) && $_GET['table'] == 'withdrawals') {
     if (isset($_GET['order'])) {
         $order = $db->escapeString($_GET['order']);
     }
-    $join = "LEFT JOIN users u ON w.user_id = u.id LEFT JOIN bank_details b ON b.user_id = w.user_id WHERE w.id IS NOT NULL ";
+    if($_SESSION['role'] == 'Super Admin'){
+        $join = "LEFT JOIN users u ON w.user_id = u.id LEFT JOIN bank_details b ON b.user_id = w.user_id WHERE w.id IS NOT NULL ";
 
+    }
+    else{
+        $refer_code = $_SESSION['refer_code'];
+        $join = "LEFT JOIN users u ON w.user_id = u.id LEFT JOIN bank_details b ON b.user_id = w.user_id WHERE u.refer_code REGEXP '^$refer_code' ";
+    }
+    
     $sql = "SELECT COUNT(w.id) as total FROM `withdrawals` w $join ". $where ."";
     $db->sql($sql);
     $res = $db->getResult();
@@ -319,8 +326,14 @@ if (isset($_GET['table']) && $_GET['table'] == 'transactions') {
     if (isset($_GET['order'])) {
         $order = $db->escapeString($_GET['order']);
     }
-    $join = "LEFT JOIN `users` u ON t.user_id = u.id WHERE t.id IS NOT NULL ";
+    if($_SESSION['role'] == 'Super Admin'){
+        $join = "LEFT JOIN `users` u ON t.user_id = u.id WHERE t.id IS NOT NULL ";
 
+    }
+    else{
+        $refer_code = $_SESSION['refer_code'];
+        $join = "LEFT JOIN `users` u ON t.user_id = u.id WHERE u.refer_code REGEXP '^$refer_code' ";
+    }
     $sql = "SELECT COUNT(t.id) as total FROM `transactions` t $join " . $where . "";
     $db->sql($sql);
     $res = $db->getResult();

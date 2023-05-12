@@ -194,6 +194,12 @@ $fn = new custom_functions;
                         <span>Withdrawals</span>
                     </a>
                 </li>
+                <li class="treeview">
+                    <a href="transactions.php">
+                    <i class="fa fa-arrow-right"></i>
+                       <span>Transactions</span>
+                    </a>
+                </li>
 
 
                 <?php
@@ -218,12 +224,7 @@ $fn = new custom_functions;
                         <span>Search Withdrawals</span>
                     </a>
                 </li>
-                <li class="treeview">
-                    <a href="transactions.php">
-                    <i class="fa fa-arrow-right"></i>
-                       <span>Transactions</span>
-                    </a>
-                </li>
+
 
                 <li class="treeview">
                     <a href="manage-devices.php">

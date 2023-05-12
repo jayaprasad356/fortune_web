@@ -89,14 +89,19 @@ include "header.php";
                         <a href="users.php" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
                     </div>
                 </div>
-                <?php
-                if($_SESSION['role'] == 'Super Admin'){?>
                                 <div class="col-lg-4 col-xs-6">
                     <div class="small-box bg-red">
                         <div class="inner">
                         <h3><?php
                             $currentdate = date('Y-m-d');
-                            $sql = "SELECT * FROM users WHERE joined_date= '$currentdate'";
+                            if($_SESSION['role'] == 'Super Admin'){
+                                $join = "WHERE joined_date= '$currentdate' AND status = 1";
+                            }
+                            else{
+                                $refer_code = $_SESSION['refer_code'];
+                                $join = "WHERE joined_date= '$currentdate' AND status = 1 AND refer_code REGEXP '^$refer_code' ";
+                            }
+                            $sql = "SELECT * FROM users $join";
                             $db->sql($sql);
                             $res = $db->getResult();
                             $num = $db->numRows($res);
@@ -112,7 +117,14 @@ include "header.php";
                     <div class="small-box bg-orange">
                         <div class="inner">
                         <h3><?php
-                            $sql = "SELECT SUM(amount) AS amount FROM withdrawals WHERE status=0";
+                            if($_SESSION['role'] == 'Super Admin'){
+                                $join = "AND w.status = 0";
+                            }
+                            else{
+                                $refer_code = $_SESSION['refer_code'];
+                                $join = "AND w.status = 0 AND u.refer_code REGEXP '^$refer_code' ";
+                            }
+                            $sql = "SELECT SUM(w.amount) AS amount FROM withdrawals w,users u WHERE u.id = w.user_id $join";
                             $db->sql($sql);
                             $res = $db->getResult();
                             $totalamount = $res[0]['amount'];
@@ -128,7 +140,14 @@ include "header.php";
                     <div class="small-box bg-purple">
                         <div class="inner">
                         <h3><?php
-                            $sql = "SELECT SUM(amount) AS amount FROM withdrawals WHERE status=1";
+                            if($_SESSION['role'] == 'Super Admin'){
+                                $join = "AND w.status = 1";
+                            }
+                            else{
+                                $refer_code = $_SESSION['refer_code'];
+                                $join = "AND w.status = 1 AND u.refer_code REGEXP '^$refer_code' ";
+                            }
+                            $sql = "SELECT SUM(w.amount) AS amount FROM withdrawals w,users u WHERE u.id = w.user_id $join";
                             $db->sql($sql);
                             $res = $db->getResult();
                             $totalamount = $res[0]['amount'];
@@ -144,7 +163,14 @@ include "header.php";
                     <div class="small-box bg-aqua">
                         <div class="inner">
                         <h3><?php
-                            $sql = "SELECT SUM(amount) AS amount FROM transactions";
+                            if($_SESSION['role'] == 'Super Admin'){
+                                $join = "";
+                            }
+                            else{
+                                $refer_code = $_SESSION['refer_code'];
+                                $join = "AND u.refer_code REGEXP '^$refer_code' ";
+                            }
+                            $sql = "SELECT SUM(t.amount) AS amount FROM transactions t,users u WHERE u.id = t.user_id $join";
                             $db->sql($sql);
                             $res = $db->getResult();
                             $totalamount = $res[0]['amount'];
@@ -156,10 +182,6 @@ include "header.php";
                         <a href="transactions.php" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
                     </div>
                 </div>
-                <?php
-                    
-                }
-                ?>
 
             </div>
         </section>
