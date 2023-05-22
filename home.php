@@ -19,8 +19,50 @@ if ($currentTime > $_SESSION['timeout']) {
 // destroy previous session timeout and create new one
 unset($_SESSION['timeout']);
 $_SESSION['timeout'] = $currentTime + $expired;
-
 include "header.php";
+if ($_SESSION['role'] == 'Super Admin') {
+    $joinCondition = "";
+    $referCodePattern = "";
+} else {
+    $referCode = $_SESSION['refer_code'];
+    $joinCondition = "WHERE refer_code REGEXP '^$referCode'";
+    $referCodePattern = "^$referCode";
+}
+
+// Fetch user count
+$sql = "SELECT COUNT(*) AS userCount FROM users $joinCondition";
+$db->sql($sql);
+$res = $db->getResult();
+$userCount = (isset($res[0]['userCount'])) ? $res[0]['userCount'] : 0;
+// Fetch active user count
+$sql = "SELECT COUNT(*) AS activeUserCount FROM users $joinCondition AND status = 1 AND code_generate = 1 AND today_codes != 0";
+$db->sql($sql);
+$res = $db->getResult();
+$activeUserCount = (isset($res[0]['activeUserCount'])) ? $res[0]['activeUserCount'] : 0;
+// Fetch today's registration count
+$currentDate = date('Y-m-d');
+$sql = "SELECT COUNT(*) AS todayRegistrationCount FROM users $joinCondition AND joined_date = '$currentDate' AND status = 1";
+$db->sql($sql);
+$res = $db->getResult();
+$todayRegistrationCount = (isset($res[0]['todayRegistrationCount'])) ? $res[0]['todayRegistrationCount'] : 0;
+
+// Fetch unpaid withdrawals amount
+$sql = "SELECT SUM(w.amount) AS unpaidWithdrawalsAmount FROM withdrawals w INNER JOIN users u ON u.id = w.user_id WHERE u.refer_code REGEXP '$referCodePattern' AND w.status = 0";
+$db->sql($sql);
+$res = $db->getResult();
+$unpaidWithdrawalsAmount = "Rs." . (isset($res[0]['unpaidWithdrawalsAmount'])) ? $res[0]['unpaidWithdrawalsAmount'] : 0;
+// Fetch paid withdrawals amount
+$sql = "SELECT SUM(w.amount) AS paidWithdrawalsAmount FROM withdrawals w INNER JOIN users u ON u.id = w.user_id WHERE u.refer_code REGEXP '$referCodePattern' AND w.status = 1";
+$db->sql($sql);
+$res = $db->getResult();
+$paidWithdrawalsAmount = "Rs." . (isset($res[0]['paidWithdrawalsAmount'])) ? $res[0]['paidWithdrawalsAmount'] : 0;
+// Fetch total transactions amount
+$sql = "SELECT SUM(t.amount) AS totalTransactionsAmount FROM transactions t INNER JOIN users u ON u.id = t.user_id WHERE u.refer_code REGEXP '$referCodePattern'";
+$db->sql($sql);
+$res = $db->getResult();
+$totalTransactionsAmount = "Rs." . (isset($res[0]['totalTransactionsAmount'])) ? $res[0]['totalTransactionsAmount'] : 0;
+
+
 ?>
 <html>
 
@@ -47,18 +89,7 @@ include "header.php";
                     <div class="small-box bg-aqua">
                         <div class="inner">
                             <h3><?php
-                            if($_SESSION['role'] == 'Super Admin'){
-                                $join = "WHERE id IS NOT NULL";
-                            }
-                            else{
-                                $refer_code = $_SESSION['refer_code'];
-                                $join = "WHERE refer_code REGEXP '^$refer_code'";
-                            }
-                            $sql = "SELECT * FROM users $join";
-                            $db->sql($sql);
-                            $res = $db->getResult();
-                            $num = $db->numRows($res);
-                            echo $num;
+                            echo $userCount;
                              ?></h3>
                             <p>Users</p>
                         </div>
@@ -70,18 +101,7 @@ include "header.php";
                     <div class="small-box bg-green">
                         <div class="inner">
                         <h3><?php
-                            if($_SESSION['role'] == 'Super Admin'){
-                                $join = "WHERE status=1 AND code_generate = 1 AND today_codes != 0";
-                            }
-                            else{
-                                $refer_code = $_SESSION['refer_code'];
-                                $join = "WHERE status=1 AND code_generate = 1 AND refer_code REGEXP '^$refer_code' AND today_codes != 0 ";
-                            }
-                            $sql = "SELECT * FROM users $join";
-                            $db->sql($sql);
-                            $res = $db->getResult();
-                            $num = $db->numRows($res);
-                            echo $num;
+                            echo $activeUserCount;
                              ?></h3>
                             <p>Active Users</p>
                         </div>
@@ -93,19 +113,7 @@ include "header.php";
                     <div class="small-box bg-red">
                         <div class="inner">
                         <h3><?php
-                            $currentdate = date('Y-m-d');
-                            if($_SESSION['role'] == 'Super Admin'){
-                                $join = "WHERE joined_date= '$currentdate' AND status = 1";
-                            }
-                            else{
-                                $refer_code = $_SESSION['refer_code'];
-                                $join = "WHERE joined_date= '$currentdate' AND status = 1 AND refer_code REGEXP '^$refer_code' ";
-                            }
-                            $sql = "SELECT * FROM users $join";
-                            $db->sql($sql);
-                            $res = $db->getResult();
-                            $num = $db->numRows($res);
-                            echo $num;
+                            echo $todayRegistrationCount;
                              ?></h3>
                             <p>Today Registration</p>
                         </div>
@@ -117,18 +125,7 @@ include "header.php";
                     <div class="small-box bg-orange">
                         <div class="inner">
                         <h3><?php
-                            if($_SESSION['role'] == 'Super Admin'){
-                                $join = "AND w.status = 0";
-                            }
-                            else{
-                                $refer_code = $_SESSION['refer_code'];
-                                $join = "AND w.status = 0 AND u.refer_code REGEXP '^$refer_code' ";
-                            }
-                            $sql = "SELECT SUM(w.amount) AS amount FROM withdrawals w,users u WHERE u.id = w.user_id $join";
-                            $db->sql($sql);
-                            $res = $db->getResult();
-                            $totalamount = $res[0]['amount'];
-                            echo "Rs.".$totalamount;
+                            echo $unpaidWithdrawalsAmount;
                              ?></h3>
                             <p>Unpaid Withdrawals</p>
                         </div>
@@ -140,18 +137,7 @@ include "header.php";
                     <div class="small-box bg-purple">
                         <div class="inner">
                         <h3><?php
-                            if($_SESSION['role'] == 'Super Admin'){
-                                $join = "AND w.status = 1";
-                            }
-                            else{
-                                $refer_code = $_SESSION['refer_code'];
-                                $join = "AND w.status = 1 AND u.refer_code REGEXP '^$refer_code' ";
-                            }
-                            $sql = "SELECT SUM(w.amount) AS amount FROM withdrawals w,users u WHERE u.id = w.user_id $join";
-                            $db->sql($sql);
-                            $res = $db->getResult();
-                            $totalamount = $res[0]['amount'];
-                            echo "Rs.".$totalamount;
+                            echo $paidWithdrawalsAmount;
                              ?></h3>
                             <p>Paid Withdrawals</p>
                         </div>
@@ -163,18 +149,7 @@ include "header.php";
                     <div class="small-box bg-aqua">
                         <div class="inner">
                         <h3><?php
-                            if($_SESSION['role'] == 'Super Admin'){
-                                $join = "";
-                            }
-                            else{
-                                $refer_code = $_SESSION['refer_code'];
-                                $join = "AND u.refer_code REGEXP '^$refer_code' ";
-                            }
-                            $sql = "SELECT SUM(t.amount) AS amount FROM transactions t,users u WHERE u.id = t.user_id $join";
-                            $db->sql($sql);
-                            $res = $db->getResult();
-                            $totalamount = $res[0]['amount'];
-                            echo "Rs.".$totalamount;
+                            echo $totalTransactionsAmount;
                              ?></h3>
                             <p>Total Transactions</p>
                         </div>
