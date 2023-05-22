@@ -21,7 +21,7 @@ unset($_SESSION['timeout']);
 $_SESSION['timeout'] = $currentTime + $expired;
 include "header.php";
 if ($_SESSION['role'] == 'Super Admin') {
-    $joinCondition = "";
+    $joinCondition = "WHERE ID is NOT NULL";
     $referCodePattern = "";
 } else {
     $referCode = $_SESSION['refer_code'];
