@@ -36,6 +36,27 @@ $db->sql($sql);
 $set = $db->getResult();
 $code_generate = $set[0]['code_generate'];
 $sync_codes = $set[0]['sync_codes'];
+$sql = "SELECT datetime FROM transactions WHERE user_id = $user_id AND type = 'generate' ORDER BY datetime DESC LIMIT 1 ";
+$db->sql($sql);
+$tres = $db->getResult();
+$num = $db->numRows($tres);
+if ($num >= 1) {
+    $dt1 = $tres[0]['datetime'];
+    $date1 = new DateTime($dt1);
+    $date2 = new DateTime($datetime);
+
+    $diff = $date1->diff($date2);
+    $totalMinutes = ($diff->days * 24 * 60) + ($diff->h * 60) + $diff->i;
+    if($totalMinutes < 5){
+        $response['success'] = false;
+        $response['message'] = "Cannot Sync Right Now, Try again after few mins";
+        print_r(json_encode($response));
+        return false;
+
+    }
+
+
+}
 if($code_generate == 1){
     if($codes != 0){
         if($codes <= $sync_codes){
