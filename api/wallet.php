@@ -47,7 +47,7 @@ if ($num >= 1) {
 
     $diff = $date1->diff($date2);
     $totalMinutes = ($diff->days * 24 * 60) + ($diff->h * 60) + $diff->i;
-    if($totalMinutes < 5){
+    if($totalMinutes < 3){
         $response['success'] = false;
         $response['message'] = "Cannot Sync Right Now, Try again after few mins";
         print_r(json_encode($response));
