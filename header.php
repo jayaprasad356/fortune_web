@@ -163,7 +163,12 @@ $fn = new custom_functions;
                         <i class="fa fa-home" class="active"></i> <span>Home</span>
                     </a>
                 </li>
-
+                <li class="treeview">
+                    <a href="reports.php">
+                    <i class="fa fa-users"></i>
+                        <span>Reports</span>
+                    </a>
+                </li>
                 <li class="treeview">
                     <a href="users.php">
                     <i class="fa fa-users"></i>
@@ -200,7 +205,7 @@ $fn = new custom_functions;
                        <span>Transactions</span>
                     </a>
                 </li>
-
+ 
 
                 <?php
                 if($_SESSION['role'] == 'Super Admin'){?>
@@ -217,7 +222,20 @@ $fn = new custom_functions;
                         <span>Bank Details</span>
                     </a>
                 </li>
+                <li class="treeview">
+                    <a href="#">
+                        <i class="fa fa-gear"></i>
+                        <span>Settings</span>
+                        <i class="fa fa-angle-right pull-right"></i>
+                    </a>
+                    <ul class="treeview-menu">
+                        <li><a href="settings.php"><i class="fa fa-gear"></i>Settings</a></li>
+                        <li><a href="code_settings.php"><i class="fa fa-gear"></i>Code Settings</a></li>
+                        <li><a href="champion_settings.php"><i class="fa fa-trophy"></i>Champion Settings</a></li>
+                        <li><a href="info_settings.php"><i class="fa fa-info"></i>Info Settings</a></li>
 
+                    </ul>
+                </li>
                 <li class="treeview">
                     <a href="search_withdrawals.php">
                     <i class="fa fa-search"></i>

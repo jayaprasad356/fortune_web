@@ -76,7 +76,7 @@ $totalTransactionsAmount = "Rs." . (isset($res[0]['totalTransactionsAmount'])) ?
     <div class="content-wrapper">
         <!-- Content Header (Page header) -->
         <section class="content-header">
-            <h1>Home</h1>
+            <h1>Reports</h1>
             <ol class="breadcrumb">
                 <li>
                     <a href="home.php"> <i class="fa fa-home"></i> Home</a>
@@ -85,6 +85,18 @@ $totalTransactionsAmount = "Rs." . (isset($res[0]['totalTransactionsAmount'])) ?
         </section>
         <section class="content">
             <div class="row">
+                <div class="col-lg-4 col-xs-6">
+                    <div class="small-box bg-aqua">
+                        <div class="inner">
+                            <h3><?php
+                            echo $userCount;
+                             ?></h3>
+                            <p>Users</p>
+                        </div>
+                        <div class="icon"><i class="fa fa-users"></i></div>
+                        <a href="users.php" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+                    </div>
+                </div>
                 <div class="col-lg-4 col-xs-6">
                     <div class="small-box bg-green">
                         <div class="inner">
@@ -97,6 +109,55 @@ $totalTransactionsAmount = "Rs." . (isset($res[0]['totalTransactionsAmount'])) ?
                         <a href="users.php" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
                     </div>
                 </div>
+                                <div class="col-lg-4 col-xs-6">
+                    <div class="small-box bg-red">
+                        <div class="inner">
+                        <h3><?php
+                            echo $todayRegistrationCount;
+                             ?></h3>
+                            <p>Today Registration</p>
+                        </div>
+                        <div class="icon"><i class="fa fa-calendar"></i></div>
+                        <a href="users.php?date=<?php echo date('Y-m-d') ?>" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-xs-6">
+                    <div class="small-box bg-orange">
+                        <div class="inner">
+                        <h3><?php
+                            echo $unpaidWithdrawalsAmount;
+                             ?></h3>
+                            <p>Unpaid Withdrawals</p>
+                        </div>
+                        <div class="icon"><i class="fa fa-money"></i></div>
+                        <a href="withdrawals.php" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-xs-6">
+                    <div class="small-box bg-purple">
+                        <div class="inner">
+                        <h3><?php
+                            echo $paidWithdrawalsAmount;
+                             ?></h3>
+                            <p>Paid Withdrawals</p>
+                        </div>
+                        <div class="icon"><i class="fa fa-money"></i></div>
+                        <a href="withdrawals.php" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-xs-6">
+                    <div class="small-box bg-aqua">
+                        <div class="inner">
+                        <h3><?php
+                            echo $totalTransactionsAmount;
+                             ?></h3>
+                            <p>Total Transactions</p>
+                        </div>
+                        <div class="icon"><i class="fa fa-arrow-right"></i></div>
+                        <a href="transactions.php" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+                    </div>
+                </div>
+
             </div>
         </section>
     </div>
