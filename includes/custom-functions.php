@@ -74,6 +74,57 @@ class custom_functions
             return false;
         }
     }
+    public function get_code_per_cost($id)
+    {
+        $sql = "SELECT per_code_cost FROM users WHERE id=" . $id;
+        $this->db->sql($sql);
+        $res = $this->db->getResult();
+        if (!empty($res) && isset($res[0]['per_code_cost'])) {
+            return $res[0]['per_code_cost'];
+        } else {
+            return COST_PER_CODE;
+        }
+    }
+    public function update_refer_code_cost($id)
+    {
+        $sql = "SELECT l_referral_count FROM users WHERE id = " . $id;
+        $this->db->sql($sql);
+        $res = $this->db->getResult();
+        if (!empty($res) && isset($res[0]['l_referral_count'])) {
+            $l_referral_count =  $res[0]['l_referral_count'];
+            $per_code_val = 1;
+            if($l_referral_count <= 2){
+                $per_code_val = 1;
+                $level = 1;
+
+
+            }elseif($l_referral_count >= 3 && $l_referral_count <= 4){
+                $per_code_val = 2;
+                $level = 2;
+
+            }
+            elseif($l_referral_count >= 5 && $l_referral_count <= 7){
+                $per_code_val = 3;
+                $level = 3;
+
+            }
+            elseif($l_referral_count >= 8 && $l_referral_count <= 9){
+                $per_code_val = 4;
+                $level = 4;
+
+            }else{
+                $per_code_val = 6;
+                $level = 5;
+
+            }
+            $sql_query = "UPDATE users SET `per_code_val` = $per_code_val,`level` = $level WHERE id =  $id";
+            $this->db->sql($sql_query);
+
+            return '';
+        } else {
+            return '';
+        }
+    }
     public function validate_image($file, $is_image = true)
     {
         if (function_exists('finfo_file')) {

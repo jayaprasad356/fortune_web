@@ -98,6 +98,73 @@ $totalTransactionsAmount = "Rs." . (isset($res[0]['totalTransactionsAmount'])) ?
                     </div>
                 </div>
             </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="box box-warning">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">Top Today Coders <small>( Day: <?= date("D"); ?>)</small></h3>
+                            <div class="box-tools pull-right">
+                                <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                                <button class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                            </div>
+                        </div>
+                        <div class="box-body">
+
+                            <div class="table-responsive">
+                                <table class="table no-margin" id='top_seller_table' class="table table-hover" data-toggle="table" data-url="api-firebase/get-bootstrap-table-data.php?table=top_coders" data-page-list="[5, 10, 20, 50, 100, 200,500]" data-show-refresh="true" data-show-columns="true" data-side-pagination="server" data-pagination="true" data-search="true" data-trim-on-search="false" data-filter-control="true" data-query-params="queryParams_top_seller" data-sort-name="today_codes" data-sort-order="desc" data-show-export="true" data-export-types='["txt","csv"]' data-export-options='{
+                                "fileName": "Yellow app-withdrawals-list-<?= date('d-m-Y') ?>",
+                                "ignoreColumn": ["operate"] 
+                            }'>
+                                    <thead>
+                                        <tr>
+                                            <th data-field="id" data-sortable='true'>ID</th>
+                                            <!-- <th data-field="joined_date" data-visible="true">Joined Date</th> -->
+                                            <th data-field="name" data-sortable='true'>Name</th>
+                                            <th data-field="mobile">Mobile</th>
+                                            <th data-field="today_codes" data-sortable='true'>Codes</th>
+                                            
+                                            <th data-field="earn" >Earn</th>
+                                           
+                                            <th data-field="l_referral_count" data-sortable='true'>Level Referals Count</th>
+                                            <th data-field="level" data-sortable='true'>Level</th>
+                                        
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <!-- <div class="col-md-6">
+                    <div class="box box-primary">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">Top Categories <small> ( Month: <?= date("M"); ?>) </small></h3>
+                            <div class="box-tools pull-right">
+                                <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                                <button class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                            </div>
+                        </div>
+                        <div class="box-body">
+
+                            <div class="table-responsive">
+                                <table class="table no-margin" id='top_seller_table' data-toggle="table" data-url="api-firebase/get-bootstrap-table-data.php?table=top_categories" data-page-list="[5,10]" data-page-size="5" data-show-refresh="true" data-show-columns="true" data-side-pagination="server" data-pagination="true" data-sort-name="total_revenues" data-sort-order="desc" data-toolbar="#toolbar" data-query-params="queryParams_top_cat">
+                                    <thead>
+                                        <tr>
+                                            <th data-field="id" data-sortable='true'>Rank</th>
+                                            <th data-field="cat_name" data-sortable='true' data-visible="true">Category</th>
+                                            <th data-field="p_name" data-sortable='true' data-visible="true">Product Name</th>
+                                            <th data-field="total_revenues" data-sortable='true'>Total Revenue(<?= $settings['currency'] ?>)</th>
+                                            <th data-field="operate">Action</th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                        </div>
+
+                    </div>
+                </div> -->
+            </div>
         </section>
     </div>
     <script>
@@ -123,5 +190,49 @@ $totalTransactionsAmount = "Rs." . (isset($res[0]['totalTransactionsAmount'])) ?
 
     </script>
     <?php include "footer.php"; ?>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script>
+        google.charts.load('current', {
+            'packages': ['bar']
+        });
+        google.charts.setOnLoadCallback(drawChart);
+
+        function drawChart() {
+            var data = google.visualization.arrayToDataTable([
+                ['Hour', 'Total - <?= $stu_total[0]['total'] ?>'],
+                <?php foreach ($result_order as $row) {
+                    //$date = date('d-M', strtotime($row['order_date']));
+                    echo "['" . $row['time'] . "'," . $row['numoft'] . "],";
+                } ?>
+            ]);
+            var options = {
+                chart: {
+                    title: 'Transactions By Hour Wise',
+                    //subtitle: 'Total Sale In Last Week (Month: <?php echo date("M"); ?>)',
+                }
+            };
+
+            var chart = new google.charts.Bar(document.getElementById('earning_chart'));
+            chart.draw(data, google.charts.Bar.convertOptions(options));
+
+
+            var data = google.visualization.arrayToDataTable([
+                ['Hour', 'Total - <?= $stu_total2[0]['total'] .'\n₹'.$stu_total2[0]['total'] * COST_PER_CODE ?>'],
+                <?php foreach ($result_order2 as $row) {
+                    //$date = date('d-M', strtotime($row['order_date']));
+                    echo "['" . $row['time'] . "'," . $row['codes'] . "],";
+                } ?>
+            ]);
+            var options = {
+                chart: {
+                    title: 'Codes By Hour Wise',
+                    //subtitle: 'Total Sale In Last Week (Month: <?php echo date("M"); ?>)',
+                }
+            };
+
+            var chart = new google.charts.Bar(document.getElementById('earning_chart2'));
+            chart.draw(data, google.charts.Bar.convertOptions(options));
+        }
+    </script>
 </body>
 </html>

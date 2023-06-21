@@ -45,6 +45,10 @@ if (isset($_POST['btnEdit'])) {
             $champion_task_eligible = $db->escapeString(($_POST['champion_task_eligible']));
             $mcg_timer = $db->escapeString(($_POST['mcg_timer']));
             $ad_status = $db->escapeString(($_POST['ad_status']));
+            $l_referral_count = (isset($_POST['l_referral_count']) && !empty($_POST['l_referral_count'])) ? $db->escapeString($_POST['l_referral_count']) : 0;
+
+            $level = $db->escapeString(($_POST['level']));
+            $per_code_val = $db->escapeString(($_POST['per_code_val']));
             $error = array();
 
      if (!empty($name) && !empty($mobile) && !empty($password)&& !empty($dob) && !empty($email) && !empty($city) && !empty($code_generate_time)) {
@@ -70,16 +74,19 @@ if (isset($_POST['btnEdit'])) {
                 $refer_sa_balance=200;
 
 
-                $sql_query = "UPDATE users SET `total_referrals` = total_referrals + 1,`earn` = earn + $referral_bonus,`balance` = balance + $referral_bonus,`salary_advance_balance`=salary_advance_balance +$refer_sa_balance,`sa_refer_count`=sa_refer_count + 1  WHERE id =  $user_id";
+                $sql_query = "UPDATE users SET `l_referral_count` = l_referral_count + 1,`earn` = earn + $referral_bonus,`balance` = balance + $referral_bonus,`salary_advance_balance`=salary_advance_balance +$refer_sa_balance,`sa_refer_count`=sa_refer_count + 1  WHERE id =  $user_id";
                 $db->sql($sql_query);
+                $fn->update_refer_code_cost($user_id);
                 $sql_query = "INSERT INTO transactions (user_id,amount,datetime,type)VALUES($user_id,$referral_bonus,'$datetime','refer_bonus')";
                 $db->sql($sql_query);
                 $sql_query = "INSERT INTO salary_advance_trans (user_id,refer_user_id,amount,datetime,type)VALUES($ID,$user_id,'$refer_sa_balance','$datetime','credit')";
                 $db->sql($sql_query);
                 if($ref_user_status == 1){
-                    $sql_query = "UPDATE users SET `earn` = earn + $code_bonus,`balance` = balance + $code_bonus,`today_codes` = today_codes + $refer_bonus_codes,`total_codes` = total_codes + $refer_bonus_codes WHERE refer_code =  '$referred_by' AND status = 1";
+                    $ref_per_code_cost = $fn->get_code_per_cost($user_id);
+                    $amount = $refer_bonus_codes  * $ref_per_code_cost;
+                    $sql_query = "UPDATE users SET `earn` = earn + $amount,`balance` = balance + $amount,`today_codes` = today_codes + $refer_bonus_codes,`total_codes` = total_codes + $refer_bonus_codes WHERE refer_code =  '$referred_by' AND status = 1";
                     $db->sql($sql_query);
-                    $sql_query = "INSERT INTO transactions (user_id,amount,codes,datetime,type)VALUES($user_id,$code_bonus,$refer_bonus_codes,'$datetime','code_bonus')";
+                    $sql_query = "INSERT INTO transactions (user_id,amount,codes,datetime,type)VALUES($user_id,$amount,$refer_bonus_codes,'$datetime','code_bonus')";
                     $db->sql($sql_query);
                 }
                 $sql_query = "UPDATE users SET refer_bonus_sent = 1 WHERE id =  $ID";
@@ -89,6 +96,7 @@ if (isset($_POST['btnEdit'])) {
 
 
         }
+        $fn->update_refer_code_cost($ID);
         if($status == 1 && $register_bonus_sent != 1){
             $join_codes = 1000;
             $register_bonus = $join_codes * COST_PER_CODE;
@@ -103,7 +111,7 @@ if (isset($_POST['btnEdit'])) {
             
         }
     
-        $sql_query = "UPDATE users SET name='$name', mobile='$mobile', password='$password', dob='$dob', email='$email', city='$city', refer_code='$refer_code', referred_by='$referred_by', earn='$earn', total_referrals='$total_referrals', balance='$balance', withdrawal_status=$withdrawal_status,total_codes=$total_codes, today_codes=$today_codes,device_id='$device_id',status = $status,code_generate = $code_generate,code_generate_time = $code_generate_time,joined_date = '$joined_date',task_type='$task_type',champion_task_eligible='$champion_task_eligible',mcg_timer='$mcg_timer',ad_status='$ad_status',security='$security',salary_advance_balance = $salary_advance_balance WHERE id =  $ID";
+        $sql_query = "UPDATE users SET name='$name', mobile='$mobile', password='$password', dob='$dob', email='$email', city='$city', refer_code='$refer_code', referred_by='$referred_by', earn='$earn', total_referrals='$total_referrals', balance='$balance', withdrawal_status=$withdrawal_status,total_codes=$total_codes, today_codes=$today_codes,device_id='$device_id',status = $status,code_generate = $code_generate,code_generate_time = $code_generate_time,joined_date = '$joined_date',task_type='$task_type',champion_task_eligible='$champion_task_eligible',mcg_timer='$mcg_timer',ad_status='$ad_status',security='$security',salary_advance_balance = $salary_advance_balance,l_referral_count=$l_referral_count,level=$level,per_code_val=$per_code_val WHERE id =  $ID";
         $db->sql($sql_query);
         $update_result = $db->getResult();
         if (!empty($update_result)) {
@@ -326,6 +334,28 @@ if (isset($_POST['btnCancel'])) { ?>
                             <div class="col-md-3">
                                 <label for="exampleInputEmail1">Salary Advance Balance</label><i class="text-danger asterik">*</i>
                                 <input type="text" class="form-control" name="salary_advance_balance" value="<?php echo $res[0]['salary_advance_balance']; ?>">
+                            </div>
+                            <div class="col-md-3">
+                                    <label for="exampleInputEmail1">Level Referral Count</label><i class="text-danger asterik">*</i>
+                                    <input type="text" class="form-control" name="l_referral_count" value="<?php echo $res[0]['l_referral_count']; ?>">
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="exampleInputEmail1">Per Code Cost</label><i class="text-danger asterik">*</i>
+                                    <input type="text" class="form-control" name="per_code_cost" value="<?php echo $res[0]['per_code_cost']; ?>">
+                                </div>
+                        </div>
+
+                            <br>
+                            <div class="row">
+                            <div class="form-group">
+                                <div class="col-md-3">
+                                    <label for="exampleInputEmail1">Level</label><i class="text-danger asterik">*</i>
+                                    <input type="number" class="form-control" name="level" value="<?php echo $res[0]['level']; ?>">
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="exampleInputEmail1">Per Code Value</label><i class="text-danger asterik">*</i>
+                                    <input type="number" class="form-control" name="per_code_val" value="<?php echo $res[0]['per_code_val']; ?>">
+                                </div>
                             </div>
                         </div>
                         <br>

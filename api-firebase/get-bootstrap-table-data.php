@@ -294,6 +294,54 @@ if (isset($_GET['table']) && $_GET['table'] == 'withdrawals') {
     $bulkData['rows'] = $rows;
     print_r(json_encode($bulkData));
 }
+if (isset($_GET['table']) && $_GET['table'] == 'top_coders') {
+
+    $where = '';
+    $offset = (isset($_GET['offset']) && !empty(trim($_GET['offset'])) && is_numeric($_GET['offset'])) ? $db->escapeString(trim($fn->xss_clean($_GET['offset']))) : 100;
+    $limit = (isset($_GET['limit']) && !empty(trim($_GET['limit'])) && is_numeric($_GET['limit'])) ? $db->escapeString(trim($fn->xss_clean($_GET['limit']))) : 5;
+    $sort = (isset($_GET['sort']) && !empty(trim($_GET['sort']))) ? $db->escapeString(trim($fn->xss_clean($_GET['sort']))) : 'today_codes';
+    $order = (isset($_GET['order']) && !empty(trim($_GET['order']))) ? $db->escapeString(trim($fn->xss_clean($_GET['order']))) : 'DESC';
+    
+
+
+
+    $sql = "SELECT COUNT(`id`) as total FROM `users` " . $where;
+    $db->sql($sql);
+    $res = $db->getResult();
+    foreach ($res as $row)
+        $total = $row['total'];
+
+        
+    $sql = "SELECT *,DATEDIFF( '$currentdate',joined_date) AS history FROM `users` " . $where . " ORDER BY " . $sort . " " . $order . " LIMIT " . $offset . "," . $limit;
+    $db->sql($sql);
+    $res = $db->getResult();
+    $bulkData = array();
+    $bulkData['total'] = $total;
+    $rows = array();
+    $tempRow = array();
+    $i = 1;
+    foreach ($res as $row) {
+
+        // $operate = '<a href="users.php"><i class="fa fa-eye"></i>View </a>';
+        $tempRow['id'] = $i;
+        $tempRow['name'] = $row['name'];
+        
+        $tempRow['mobile'] = $row['mobile'];
+        $tempRow['today_codes'] = $row['today_codes'];
+        $tempRow['l_referral_count'] = $row['l_referral_count'];
+
+        $tempRow['level'] = $row['level'];
+        $tempRow['earn'] = $row['earn'];
+
+        $tempRow['joined_date'] = $row['joined_date'];
+        $tempRow['total_referrals'] = $row['total_referrals'];
+        // $tempRow['operate'] = $operate;
+        $i++;
+        $rows[] = $tempRow;
+    }
+    $bulkData['rows'] = $rows;
+    print_r(json_encode($bulkData));
+}
 
 
 //transactions table goes here

@@ -23,7 +23,8 @@ if (isset($_POST['btnAdd'])) {
             {
                 $datetime = date('Y-m-d H:i:s');
                 $type = 'code_bonus';
-                $amount = $codes * COST_PER_CODE;
+                $per_code_cost = $fn->get_code_per_cost($ID);
+                $amount = $codes * $per_code_cost;
                 $sql = "INSERT INTO transactions (`user_id`,`codes`,`amount`,`datetime`,`type`)VALUES('$ID','$codes','$amount','$datetime','$type')";
                 $db->sql($sql);
                 $res = $db->getResult();
