@@ -13,9 +13,8 @@ include_once('../includes/crud.php');
 $db = new Database();
 $db->connect();
 date_default_timezone_set('Asia/Kolkata');
-include_once('../includes/functions.php');
-$fn = new functions;
-$fn->monitorApi('wallet');
+include_once('../includes/custom-functions.php');
+$fn = new custom_functions;
 
 if (empty($_POST['user_id'])) {
     $response['success'] = false;
