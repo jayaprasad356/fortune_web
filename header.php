@@ -230,6 +230,7 @@ $fn = new custom_functions;
                     </a>
                     <ul class="treeview-menu">
                         <li><a href="settings.php"><i class="fa fa-gear"></i>Settings</a></li>
+                        <li><a href="reward_settings.php"><i class="fa fa-gear"></i>Reward Settings</a></li>
                         <li><a href="code_settings.php"><i class="fa fa-gear"></i>Code Settings</a></li>
                         <li><a href="champion_settings.php"><i class="fa fa-trophy"></i>Champion Settings</a></li>
                         <li><a href="info_settings.php"><i class="fa fa-info"></i>Info Settings</a></li>
