@@ -194,10 +194,15 @@ $fn = new custom_functions;
                     </a>
                 </li>
                 <li class="treeview">
-                    <a href="withdrawals.php">
-                    <i class="fa fa-money"></i>
-                        <span>Withdrawals</span>
+                    <a href="#">
+                        <i class="fa fa-money"></i>
+                        <span>withdrawals</span>
+                        <i class="fa fa-angle-right pull-right"></i>
                     </a>
+                    <ul class="treeview-menu">
+                        <li><a href="withdrawals.php"><i class="fa fa-money"></i>withdrawals</a></li>
+                        <li><a href="advance_withdrawals.php"><i class="fa fa-money"></i>Advance Salery Withdrawals</a></li>
+                    </ul>
                 </li>
                 <li class="treeview">
                     <a href="transactions.php">
