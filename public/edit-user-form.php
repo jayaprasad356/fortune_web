@@ -63,7 +63,7 @@ if (isset($_POST['btnEdit'])) {
             $num = $db->numRows($res);
             if ($num == 1){
                 $user_id = $res[0]['id'];
-                $code_generate = $res[0]['code_generate'];
+                $refer_code_generate = $res[0]['code_generate'];
                 $ref_user_status = $res[0]['status'];
                 if($ref_user_status == 1){
                     $referral_bonus = $function->getSettingsVal('refer_bonus_amount');
@@ -81,7 +81,7 @@ if (isset($_POST['btnEdit'])) {
                 $db->sql($sql_query);
                 $sql_query = "INSERT INTO salary_advance_trans (user_id,refer_user_id,amount,datetime,type)VALUES($ID,$user_id,'$refer_sa_balance','$datetime','credit')";
                 $db->sql($sql_query);
-                if($ref_user_status == 1){
+                if($ref_user_status == 1 && $refer_code_generate == 1){
                     $ref_per_code_cost = $fn->get_code_per_cost($user_id);
                     $amount = $refer_bonus_codes  * $ref_per_code_cost;
                     $sql_query = "UPDATE users SET `earn` = earn + $amount,`balance` = balance + $amount,`today_codes` = today_codes + $refer_bonus_codes,`total_codes` = total_codes + $refer_bonus_codes WHERE refer_code =  '$referred_by' AND status = 1";
