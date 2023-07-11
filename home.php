@@ -20,47 +20,11 @@ if ($currentTime > $_SESSION['timeout']) {
 unset($_SESSION['timeout']);
 $_SESSION['timeout'] = $currentTime + $expired;
 include "header.php";
-if ($_SESSION['role'] == 'Super Admin') {
-    $joinCondition = "WHERE ID is NOT NULL";
-    $referCodePattern = "";
-} else {
-    $referCode = $_SESSION['refer_code'];
-    $joinCondition = "WHERE refer_code REGEXP '^$referCode'";
-    $referCodePattern = "^$referCode";
-}
 
-// Fetch user count
-$sql = "SELECT COUNT(*) AS userCount FROM users $joinCondition";
-$db->sql($sql);
-$res = $db->getResult();
-$userCount = (isset($res[0]['userCount'])) ? $res[0]['userCount'] : 0;
-// Fetch active user count
 $sql = "SELECT COUNT(*) AS activeUserCount FROM users $joinCondition AND status = 1 AND code_generate = 1 AND today_codes != 0";
 $db->sql($sql);
 $res = $db->getResult();
 $activeUserCount = (isset($res[0]['activeUserCount'])) ? $res[0]['activeUserCount'] : 0;
-// Fetch today's registration count
-$currentDate = date('Y-m-d');
-$sql = "SELECT COUNT(*) AS todayRegistrationCount FROM users $joinCondition AND joined_date = '$currentDate' AND status = 1";
-$db->sql($sql);
-$res = $db->getResult();
-$todayRegistrationCount = (isset($res[0]['todayRegistrationCount'])) ? $res[0]['todayRegistrationCount'] : 0;
-
-// Fetch unpaid withdrawals amount
-$sql = "SELECT SUM(w.amount) AS unpaidWithdrawalsAmount FROM withdrawals w INNER JOIN users u ON u.id = w.user_id WHERE u.refer_code REGEXP '$referCodePattern' AND w.status = 0";
-$db->sql($sql);
-$res = $db->getResult();
-$unpaidWithdrawalsAmount = "Rs." . (isset($res[0]['unpaidWithdrawalsAmount'])) ? $res[0]['unpaidWithdrawalsAmount'] : 0;
-// Fetch paid withdrawals amount
-$sql = "SELECT SUM(w.amount) AS paidWithdrawalsAmount FROM withdrawals w INNER JOIN users u ON u.id = w.user_id WHERE u.refer_code REGEXP '$referCodePattern' AND w.status = 1";
-$db->sql($sql);
-$res = $db->getResult();
-$paidWithdrawalsAmount = "Rs." . (isset($res[0]['paidWithdrawalsAmount'])) ? $res[0]['paidWithdrawalsAmount'] : 0;
-// Fetch total transactions amount
-$sql = "SELECT SUM(t.amount) AS totalTransactionsAmount FROM transactions t INNER JOIN users u ON u.id = t.user_id WHERE u.refer_code REGEXP '$referCodePattern'";
-$db->sql($sql);
-$res = $db->getResult();
-$totalTransactionsAmount = "Rs." . (isset($res[0]['totalTransactionsAmount'])) ? $res[0]['totalTransactionsAmount'] : 0;
 
 
 ?>
