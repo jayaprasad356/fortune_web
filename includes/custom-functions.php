@@ -74,6 +74,41 @@ class custom_functions
             return false;
         }
     }
+    public function get_sync_time($level)
+    {
+        if ($level == 1) {
+            $time = 3;
+
+        }
+        elseif($level == 2){
+            $time = 2 ;
+        }
+        elseif($level == 3){
+            $time = 2;
+        }
+        elseif($level == 4){
+            $time = 2;
+        }
+        elseif($level == 5){
+            $time = 1;
+        }
+        else {
+            $time = 3;
+        }
+
+        return $time;
+    } 
+    public function get_value($table,$col,$id)
+    {
+        $sql = "SELECT $col FROM $table WHERE `id`= $id";
+        $this->db->sql($sql);
+        $res = $this->db->getResult();
+        if (!empty($res)) {
+            return $res[0][$col];
+        } else {
+            return 0;
+        }
+    }
     public function get_code_per_cost($id)
     {
         $sql = "SELECT per_code_cost FROM users WHERE id=" . $id;

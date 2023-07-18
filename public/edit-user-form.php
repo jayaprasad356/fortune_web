@@ -52,7 +52,8 @@ if (isset($_POST['btnEdit'])) {
             $error = array();
 
      if (!empty($name) && !empty($mobile) && !empty($password)&& !empty($dob) && !empty($email) && !empty($city) && !empty($code_generate_time)) {
-         
+        $refer_bonus_sent = $fn->get_value('users','refer_bonus_sent',$ID);
+
         if($status == 1 && !empty($referred_by) && $refer_bonus_sent != 1){
             $refer_bonus_codes = $function->getSettingsVal('refer_bonus_codes');
             $code_bonus =  $refer_bonus_codes * COST_PER_CODE;
@@ -97,6 +98,7 @@ if (isset($_POST['btnEdit'])) {
 
         }
         $fn->update_refer_code_cost($ID);
+        $register_bonus_sent = $fn->get_value('users','register_bonus_sent',$ID);
         if($status == 1 && $register_bonus_sent != 1){
             $join_codes = 1000;
             $register_bonus = $join_codes * COST_PER_CODE;
