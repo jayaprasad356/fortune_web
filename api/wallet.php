@@ -30,7 +30,8 @@ $codes = (isset($_POST['codes']) && $_POST['codes'] != "") ? $db->escapeString($
 $datetime = date('Y-m-d H:i:s');
 
 $type = 'generate';
-$sql = "SELECT num_sync_times,level FROM users WHERE id = $user_id";
+$sql = "SELECT level FROM users WHERE id = $user_id";
+
 $db->sql($sql);
 $ures = $db->getResult();
 $sql = "SELECT code_generate,num_sync_times,sync_codes,code_min_sync_time FROM settings";
