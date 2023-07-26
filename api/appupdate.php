@@ -54,11 +54,11 @@ if($user_id != ''){
         $db->sql($sql);
     
     }
-    if(isset($_POST['device_id']) && ($device_id != $old_device_id)){
-        $sql = "UPDATE `users` SET  `status` = 2 WHERE `id` = $user_id";
-        $db->sql($sql);
+    // if(isset($_POST['device_id']) && ($device_id != $old_device_id)){
+    //     $sql = "UPDATE `users` SET  `status` = 2 WHERE `id` = $user_id";
+    //     $db->sql($sql);
 
-    }
+    // }
 
     if($history_days > $set[0]['duration']){
         $sql = "UPDATE `users` SET  `code_generate` = 0 WHERE `id` = $user_id";
