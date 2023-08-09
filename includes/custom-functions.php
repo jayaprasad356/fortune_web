@@ -74,26 +74,27 @@ class custom_functions
             return false;
         }
     }
+
     public function get_sync_time($level)
     {
         if ($level == 1) {
-            $time = 3;
+            $time = 20;
 
         }
         elseif($level == 2){
-            $time = 2 ;
+            $time = 11 ;
         }
         elseif($level == 3){
-            $time = 2;
+            $time = 8;
         }
         elseif($level == 4){
-            $time = 2;
+            $time = 5;
         }
         elseif($level == 5){
-            $time = 1;
+            $time = 3;
         }
         else {
-            $time = 3;
+            $time = 11;
         }
 
         return $time;
