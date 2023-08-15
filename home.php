@@ -21,7 +21,7 @@ unset($_SESSION['timeout']);
 $_SESSION['timeout'] = $currentTime + $expired;
 include "header.php";
 
-$sql = "SELECT COUNT(*) AS activeUserCount FROM users $joinCondition AND status = 1 AND code_generate = 1 AND today_codes != 0";
+$sql = "SELECT COUNT(*) AS activeUserCount FROM users WHERE status = 1 AND code_generate = 1 AND today_codes != 0";
 $db->sql($sql);
 $res = $db->getResult();
 $activeUserCount = (isset($res[0]['activeUserCount'])) ? $res[0]['activeUserCount'] : 0;
