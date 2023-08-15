@@ -46,7 +46,7 @@ if (isset($_POST['btnEdit'])) {
             $mcg_timer = $db->escapeString(($_POST['mcg_timer']));
             $ad_status = $db->escapeString(($_POST['ad_status']));
             $l_referral_count = (isset($_POST['l_referral_count']) && !empty($_POST['l_referral_count'])) ? $db->escapeString($_POST['l_referral_count']) : 0;
-
+            $per_code_cost = $db->escapeString(($_POST['per_code_cost']));
             $level = $db->escapeString(($_POST['level']));
             $per_code_val = $db->escapeString(($_POST['per_code_val']));
             $error = array();
@@ -113,7 +113,7 @@ if (isset($_POST['btnEdit'])) {
             
         }
     
-        $sql_query = "UPDATE users SET name='$name', mobile='$mobile', password='$password', dob='$dob', email='$email', city='$city', refer_code='$refer_code', referred_by='$referred_by', earn='$earn', total_referrals='$total_referrals', balance='$balance', withdrawal_status=$withdrawal_status,total_codes=$total_codes, today_codes=$today_codes,device_id='$device_id',status = $status,code_generate = $code_generate,code_generate_time = $code_generate_time,joined_date = '$joined_date',task_type='$task_type',champion_task_eligible='$champion_task_eligible',mcg_timer='$mcg_timer',ad_status='$ad_status',security='$security',salary_advance_balance = $salary_advance_balance,l_referral_count=$l_referral_count,level=$level,per_code_val=$per_code_val WHERE id =  $ID";
+        $sql_query = "UPDATE users SET name='$name', mobile='$mobile', password='$password', dob='$dob', email='$email', city='$city', refer_code='$refer_code', referred_by='$referred_by', earn='$earn', total_referrals='$total_referrals', balance='$balance', withdrawal_status=$withdrawal_status,total_codes=$total_codes, today_codes=$today_codes,device_id='$device_id',status = $status,code_generate = $code_generate,code_generate_time = $code_generate_time,joined_date = '$joined_date',task_type='$task_type',champion_task_eligible='$champion_task_eligible',mcg_timer='$mcg_timer',ad_status='$ad_status',security='$security',salary_advance_balance = $salary_advance_balance,l_referral_count=$l_referral_count,level=$level,per_code_val=$per_code_val,per_code_cost=$per_code_cost WHERE id =  $ID";
         $db->sql($sql_query);
         $update_result = $db->getResult();
         if (!empty($update_result)) {
