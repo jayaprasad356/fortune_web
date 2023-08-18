@@ -396,15 +396,17 @@ if (isset($_GET['table']) && $_GET['table'] == 'top_coders') {
     
 
 
-
-    $sql = "SELECT COUNT(`id`) as total FROM `users` " . $where;
+    $sql = "SELECT COUNT(users.id) AS total, users.name, SUM(transactions.codes) AS today_codes,users.joined_date,users.mobile
+    FROM users
+    JOIN transactions ON users.id = transactions.user_id WHERE DATE(transactions.datetime) = '$currentdate' AND transactions.type = 'generate'
+    GROUP BY users.id";
     $db->sql($sql);
     $res = $db->getResult();
-    foreach ($res as $row)
-        $total = $row['total'];
-
-        
-    $sql = "SELECT *,DATEDIFF( '$currentdate',joined_date) AS history FROM `users` " . $where . " ORDER BY " . $sort . " " . $order . " LIMIT " . $offset . "," . $limit;
+    $total = $db->numRows($res);
+    $sql = "SELECT users.level,users.id,users.task_type,users.name,SUM(transactions.codes) AS today_codes,SUM(transactions.amount) AS earn,users.joined_date,users.mobile,users.total_referrals,users.earn AS total_earn,users.l_referral_count 
+    FROM users
+    JOIN transactions ON users.id = transactions.user_id WHERE DATE(transactions.datetime) = '$currentdate' AND transactions.type = 'generate'
+    GROUP BY users.id ORDER BY today_codes DESC LIMIT " . $offset . "," . $limit;
     $db->sql($sql);
     $res = $db->getResult();
     $bulkData = array();
@@ -418,16 +420,7 @@ if (isset($_GET['table']) && $_GET['table'] == 'top_coders') {
         $tempRow['id'] = $i;
         $tempRow['name'] = $row['name'];
         
-        $tempRow['mobile'] = $row['mobile'];
-        $tempRow['today_codes'] = $row['today_codes'];
-        $tempRow['l_referral_count'] = $row['l_referral_count'];
 
-        $tempRow['level'] = $row['level'];
-        $tempRow['earn'] = $row['earn'];
-
-        $tempRow['joined_date'] = $row['joined_date'];
-        $tempRow['total_referrals'] = $row['total_referrals'];
-        // $tempRow['operate'] = $operate;
         $i++;
         $rows[] = $tempRow;
     }
