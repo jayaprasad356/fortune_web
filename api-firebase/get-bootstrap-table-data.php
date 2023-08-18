@@ -386,47 +386,55 @@ if (isset($_GET['table']) && $_GET['table'] == 'advance_withdrawals') {
     $bulkData['rows'] = $rows;
     print_r(json_encode($bulkData));
 }
+
 if (isset($_GET['table']) && $_GET['table'] == 'top_coders') {
 
-    $where = '';
-    $offset = (isset($_GET['offset']) && !empty(trim($_GET['offset'])) && is_numeric($_GET['offset'])) ? $db->escapeString(trim($fn->xss_clean($_GET['offset']))) : 100;
-    $limit = (isset($_GET['limit']) && !empty(trim($_GET['limit'])) && is_numeric($_GET['limit'])) ? $db->escapeString(trim($fn->xss_clean($_GET['limit']))) : 5;
-    $sort = (isset($_GET['sort']) && !empty(trim($_GET['sort']))) ? $db->escapeString(trim($fn->xss_clean($_GET['sort']))) : 'today_codes';
-    $order = (isset($_GET['order']) && !empty(trim($_GET['order']))) ? $db->escapeString(trim($fn->xss_clean($_GET['order']))) : 'DESC';
-    
+    $where = '';  
+    $where .= " AND task_type = 'generate'";  
 
+    $offset = (isset($_GET['offset']) && is_numeric($_GET['offset'])) ? intval($_GET['offset']) : 100;
+    $limit = (isset($_GET['limit']) && is_numeric($_GET['limit'])) ? intval($_GET['limit']) : 5;
+    $sort = (isset($_GET['sort'])) ? $db->escapeString($_GET['sort']) : 'today_codes';
+    $order = (isset($_GET['order'])) ? $db->escapeString($_GET['order']) : 'DESC';
+    $currentdate = (isset($_GET['current_date'])) ? $db->escapeString($_GET['current_date']) : date('Y-m-d');
 
-    $sql = "SELECT COUNT(users.id) AS total, users.name, SUM(transactions.codes) AS today_codes,users.joined_date,users.mobile
-    FROM users
-    JOIN transactions ON users.id = transactions.user_id WHERE DATE(transactions.datetime) = '$currentdate' AND transactions.type = 'generate'
-    GROUP BY users.id";
+    $sql = "SELECT COUNT(`id`) as total FROM `users` WHERE 1 $where";  
     $db->sql($sql);
     $res = $db->getResult();
-    $total = $db->numRows($res);
-    $sql = "SELECT users.level,users.id,users.task_type,users.name,SUM(transactions.codes) AS today_codes,SUM(transactions.amount) AS earn,users.joined_date,users.mobile,users.total_referrals,users.earn AS total_earn,users.l_referral_count 
-    FROM users
-    JOIN transactions ON users.id = transactions.user_id WHERE DATE(transactions.datetime) = '$currentdate' AND transactions.type = 'generate'
-    GROUP BY users.id ORDER BY today_codes DESC LIMIT " . $offset . "," . $limit;
+    $total = 0;  
+    foreach ($res as $row) {
+        $total = $row['total'];
+    }
+
+    $sql = "SELECT *, DATEDIFF('$currentdate', joined_date) AS history FROM `users` WHERE 1 $where ORDER BY $sort $order LIMIT $offset, $limit";  // Add WHERE 1 for condition
     $db->sql($sql);
     $res = $db->getResult();
-    $bulkData = array();
-    $bulkData['total'] = $total;
-    $rows = array();
-    $tempRow = array();
+
+    $data = array();
+    $data['total'] = $total;
+    $data['rows'] = array();
     $i = 1;
     foreach ($res as $row) {
-
-        // $operate = '<a href="users.php"><i class="fa fa-eye"></i>View </a>';
+        $tempRow = array();
         $tempRow['id'] = $i;
         $tempRow['name'] = $row['name'];
+        $tempRow['mobile'] = $row['mobile'];
+        $tempRow['today_codes'] = $row['today_codes'];
+        $tempRow['l_referral_count'] = $row['l_referral_count'];
+        $tempRow['level'] = $row['level'];
+        $tempRow['earn'] = $row['earn'];
+        $tempRow['joined_date'] = $row['joined_date'];
+        $tempRow['total_referrals'] = $row['total_referrals'];
+      
         
-
+        $data['rows'][] = $tempRow;
         $i++;
-        $rows[] = $tempRow;
     }
-    $bulkData['rows'] = $rows;
-    print_r(json_encode($bulkData));
+
+    header('Content-Type: application/json');  // Set the response content type to JSON
+    echo json_encode($data);  // Encode the data as JSON and send it as the response
 }
+
 
 
 //transactions table goes here
