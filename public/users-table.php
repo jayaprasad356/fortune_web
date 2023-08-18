@@ -13,11 +13,16 @@
             <!-- Left col -->
             <div class="col-xs-12">
                 <div class="box">
-                    <div class="box-header">
-                    <form action="export-user.php">
-                        <button type='submit'  class="btn btn-primary"><i class="fa fa-download"></i> Export All Users</button>
-                    </form>
-                    <br>
+                <div class="box-header">
+                <div class="col-md-2">
+                <form action="export-verified-user.php">
+                            <button type='submit'  class="btn btn-primary"><i class="fa fa-download"></i> Export Verified Users</button>
+                        </form>
+                        </div>
+                        <form action="export-unverified-user.php">
+                            <button type='submit'  class="btn btn-primary"><i class="fa fa-download"></i> Export Unverified Users</button>
+                        </form>
+                        <br>
                     <div class="col-md-3">
                             <h4 class="box-title">Filter by Joined Date </h4>
                             <input type="date" class="form-control" id="date" name="date" value="<?php echo (isset($_GET['date'])) ? $_GET['date'] : "" ?>"></input>
