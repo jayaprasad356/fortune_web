@@ -10,25 +10,23 @@
     <section class="content">
         <!-- Main row -->
         <div class="row">
-            <!-- Left col -->
-            <div class="col-xs-12">
-                <div class="box">
-                <div class="box-header">
-                <div class="col-md-2">
-                <form action="export-verified-user.php">
-                            <button type='submit'  class="btn btn-primary"><i class="fa fa-download"></i> Export Verified Users</button>
-                        </form>
+                <!-- Left col -->
+                <div class="col-12">
+                    <div class="box">
+                        <div class="box-header">
+                                <div class="row">
+                                        <div class="form-group col-md-3">
+                                            <a href="export-verified-user.php" class="btn btn-primary"><i class="fa fa-download"></i> Export verified users</a>
+                                        </div>
+                                        <div class="form-group col-md-3">
+                                            <a href="export-unverified-user.php" class="btn btn-primary"><i class="fa fa-download"></i> Export unverified users</a>
+                                        </div>      
+                                </div>
+                                <div class="col-md-2">
+                                <h4 class="box-title">Joined Date </h4>
+                                <input type="date" class="form-control" id="date" name="date" value="<?php echo (isset($_GET['date'])) ? $_GET['date'] : "" ?>"></input>
                         </div>
-                        <form action="export-unverified-user.php">
-                            <button type='submit'  class="btn btn-primary"><i class="fa fa-download"></i> Export Unverified Users</button>
-                        </form>
-                        <br>
-                    <div class="col-md-3">
-                            <h4 class="box-title">Filter by Joined Date </h4>
-                            <input type="date" class="form-control" id="date" name="date" value="<?php echo (isset($_GET['date'])) ? $_GET['date'] : "" ?>"></input>
-                    </div>
-                    </div>
-                    
+                        </div>
                     <!-- /.box-header -->
                     <div class="box-body table-responsive">
                         <table id='users_table' class="table table-hover" data-toggle="table" data-url="api-firebase/get-bootstrap-table-data.php?table=users" data-page-list="[5, 10, 20, 50, 100, 200]" data-show-refresh="true" data-show-columns="true" data-side-pagination="server" data-pagination="true" data-search="true" data-trim-on-search="false" data-filter-control="true" data-query-params="queryParams" data-sort-name="id" data-sort-order="desc" data-show-export="true" data-export-types='["txt","csv"]' data-export-options='{
