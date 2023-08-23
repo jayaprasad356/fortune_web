@@ -50,6 +50,10 @@ if (isset($_POST['btnEdit'])) {
             $level = $db->escapeString(($_POST['level']));
             $per_code_val = $db->escapeString(($_POST['per_code_val']));
             $error = array();
+            
+            if (empty($mobile)) {
+                $error['mobile'] = " <span class='label label-danger'>Required!</span>";
+            }
 
      if (!empty($name) && !empty($mobile) && !empty($password)&& !empty($dob) && !empty($email) && !empty($city) && !empty($code_generate_time)) {
         $refer_bonus_sent = $fn->get_value('users','refer_bonus_sent',$ID);
@@ -199,7 +203,7 @@ if (isset($_POST['btnCancel'])) { ?>
                         <div class="row">
                             <div class="form-group">
                                 <div class="col-md-6">
-                                    <label for="exampleInputEmail1">Phone Number</label><i class="text-danger asterik">*</i>
+                                    <label for="exampleInputEmail1">Phone Number</label><i class="text-danger asterik">*</i><?php echo isset($error['mobile']) ? $error['mobile'] : ''; ?>
                                     <input type="number" class="form-control" name="mobile" value="<?php echo $res[0]['mobile']; ?>">
                                 </div>
                                 <div class="col-md-6">

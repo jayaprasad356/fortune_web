@@ -420,6 +420,7 @@ if (isset($_GET['table']) && $_GET['table'] == 'top_coders') {
         $tempRow['name'] = $row['name'];
         $tempRow['mobile'] = $row['mobile'];
         $tempRow['today_codes'] = $row['today_codes'];
+        $tempRow['refer_code'] = $row['refer_code'];
         $tempRow['l_referral_count'] = $row['l_referral_count'];
         $tempRow['level'] = $row['level'];
         $tempRow['earn'] = $row['earn'];
