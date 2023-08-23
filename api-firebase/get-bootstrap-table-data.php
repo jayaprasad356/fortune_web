@@ -403,10 +403,7 @@ if (isset($_GET['table']) && $_GET['table'] == 'top_coders') {
     GROUP BY users.id ";  
     $db->sql($sql);
     $res = $db->getResult();
-    $total = 0;  
-    foreach ($res as $row) {
-        $total = $row['total'];
-    }
+    $total = $db->numRows($res);
 
     $sql = "SELECT * FROM users
     JOIN transactions ON users.id = transactions.user_id WHERE DATE(transactions.datetime) = '$currentdate' AND transactions.type = 'generate'
