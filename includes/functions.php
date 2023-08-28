@@ -288,6 +288,12 @@ class functions
         $sql = "INSERT INTO `montior` (`api`, `datetime`) VALUES ('$api_name', '$datetime')";
         $this->db->sql($sql);
     }
+    function monitorUserApi($api_name,$user_id)
+    {
+        $datetime = date('Y-m-d H:i:s');
+        $sql = "INSERT INTO `montior` (`user_id`,`api`, `datetime`) VALUES ($user_id,'$api_name', '$datetime')";
+        $this->db->sql($sql);
+    }
     //getting all tokens to send push to all devices
     public function getAllTokens($table = 'users')
     {
