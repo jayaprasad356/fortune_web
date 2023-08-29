@@ -303,6 +303,12 @@ $fn = new custom_functions;
                     </a>
                 </li>
                 <li class="treeview">
+                    <a href="suspect_codes.php">
+                    <i class="fa fa-file"></i>
+                    <span>Suspect Codes</span>
+                    </a>
+                </li>
+                <li class="treeview">
                     <a href="payments.php">
                     <i class="fa fa-credit-card"></i>   
                         <span>Payments</span>  
@@ -332,6 +338,7 @@ $fn = new custom_functions;
                     <span>Multiple Admin</span>
                     </a>
                 </li>
+                
                 <?php
 
                 }
