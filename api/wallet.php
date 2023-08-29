@@ -113,12 +113,13 @@ if($code_generate == 1){
     }
      
     
-    $sql = "SELECT today_codes,total_codes,balance,code_generate,status,referred_by FROM users WHERE id = $user_id ";
+    $sql = "SELECT today_codes,total_codes,balance,code_generate,status,referred_by,black_box FROM users WHERE id = $user_id ";
     $db->sql($sql);
     $res = $db->getResult();
     
     $response['success'] = true;
     $response['message'] = "Code Added Successfully";
+    $response['black_box'] = $res[0]['black_box'];
     $response['status'] = $res[0]['status'];
     $response['balance'] = $res[0]['balance'];
     $response['today_codes'] = $res[0]['today_codes'];
