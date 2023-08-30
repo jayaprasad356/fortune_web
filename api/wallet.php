@@ -45,25 +45,7 @@ $code_generate = $set[0]['code_generate'];
 $sync_codes = $set[0]['sync_codes'];
 $code_min_sync_time = $fn->get_sync_time($ures[0]['level']);
 
-if($user_black_box == '1'){
-    $sql = "SELECT * FROM `suspect_codes` WHERE user_id = $user_id AND status = 0 ORDER BY id DESC LIMIT 1";
-    $db->sql($sql);
-    $res = $db->getResult();
-    $num = $db->numRows($res);
-    if ($num == 1) {
-        $s_id = $res[0]['id'];
-        $sql = "UPDATE `suspect_codes` SET  `status` = 1 WHERE `id` = $s_id";
-        $db->sql($sql);
-        
-    }else{
-        $response['success'] = false;
-        $response['message'] = "You cannot Sync now,please contact admin";
-        print_r(json_encode($response));
-        return false;
 
-    }
-
-}
 $sql = "SELECT datetime FROM transactions WHERE user_id = $user_id AND type = 'generate' ORDER BY datetime DESC LIMIT 1 ";
 $db->sql($sql);
 $tres = $db->getResult();
@@ -100,6 +82,26 @@ if($code_generate == 1){
                 $response['message'] = "You Reached Daily Sync Limit";
                 print_r(json_encode($response));
                 return false;
+            }
+
+            if($user_black_box == '1'){
+                $sql = "SELECT * FROM `suspect_codes` WHERE user_id = $user_id AND status = 0 ORDER BY id DESC LIMIT 1";
+                $db->sql($sql);
+                $res = $db->getResult();
+                $num = $db->numRows($res);
+                if ($num == 1) {
+                    $s_id = $res[0]['id'];
+                    $sql = "UPDATE `suspect_codes` SET  `status` = 1 WHERE `id` = $s_id";
+                    $db->sql($sql);
+                    
+                }else{
+                    $response['success'] = false;
+                    $response['message'] = "You cannot Sync now,please contact admin";
+                    print_r(json_encode($response));
+                    return false;
+            
+                }
+            
             }
     
             $sql = "INSERT INTO transactions (`user_id`,`codes`,`amount`,`datetime`,`type`)VALUES('$user_id','$codes','$amount','$datetime','$type')";
