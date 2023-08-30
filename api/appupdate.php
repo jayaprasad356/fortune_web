@@ -46,7 +46,7 @@ if($user_id != ''){
    
     $champion_task = $set[0]['champion_task'];
     if($res[0]['black_box'] == 1 ){
-        $appres[0]['version'] = '13';
+        $appres[0]['version'] = '14';
 
     }
 
