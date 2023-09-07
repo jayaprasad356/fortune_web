@@ -68,6 +68,18 @@ $referred_by = (isset($_POST['referred_by']) && !empty($_POST['referred_by'])) ?
 $dob = $db->escapeString($_POST['dob']);
 $device_id = $db->escapeString($_POST['device_id']);
 
+$sql = "SELECT id FROM users WHERE device_id='$device_id'";
+$db->sql($sql);
+$res = $db->getResult();
+$num = $db->numRows($res);
+if ($num >= 1) {
+    $response['success'] = false;
+    $response['message'] ="User Already Registered with this device kindly register with new device";
+    print_r(json_encode($response));
+    return false;
+}
+
+
 $sql = "SELECT * FROM users WHERE mobile='$mobile'";
 $db->sql($sql);
 $res = $db->getResult();
