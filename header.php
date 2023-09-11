@@ -175,12 +175,18 @@ $fn = new custom_functions;
                         <span>Users</span>
                     </a>
                 </li>
-                <!-- <li class="treeview">
-                    <a href="manage_users.php">
-                    <i class="fa fa-user"></i>
-                        <span>Manage Verify Users</span>
+                <li class="treeview">
+                    <a href="#">
+                        <i class="fa fa-bullseye"></i>
+                        <span>Staffs</span>
+                        <i class="fa fa-angle-right pull-right"></i>
                     </a>
-                </li> -->
+                    <ul class="treeview-menu">
+                        <li><a href="staffs.php"><i class="fa fa-user"></i>Staffs</a></li>
+                        <!-- <li><a href="staff_withdrawals.php"><i class="fa fa-money"></i>Staff Withdrawals</a></li>
+                        <li><a href="staff_transactions.php"><i class="fa fa-arrow-right"></i>Staff Transactions</a></li> -->
+                    </ul>
+                </li>
                 <li class="treeview">
                     <a href="referal_codes.php">
                     <i class="fa fa-money"></i>

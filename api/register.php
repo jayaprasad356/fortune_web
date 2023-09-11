@@ -100,28 +100,44 @@ else{
             break;
         }
     } while(1);
+
+    $support_id = 0;
+
+    $branch_id = '1';
     if(empty($referred_by)){
         $refer_code = MAIN_REFER . $random_number;
 
     }
     else{
-        $admincode = substr($referred_by, 0, -5);
-        $sql = "SELECT refer_code FROM admin WHERE refer_code='$admincode' OR refer_code='$referred_by'";
+        $refershot = substr($referred_by, 0, -5);
+
+        $sql = "SELECT short_code FROM branches WHERE short_code = '$refershot'";
         $db->sql($sql);
-        $result = $db->getResult();
-        $num = $db->numRows($result);
-        if($num>=1){
-            $admincode = $result[0]['refer_code'];
-            $refer_code = $admincode . $random_number;
-        }
-        else{
+        $ares = $db->getResult();
+        $num = $db->numRows($ares);
+        if ($num >= 1) {
+            $refer_code_db = $ares[0]['short_code'];
+            $refer_code = $refer_code_db . $random_number;
+
+        }else{
             $refer_code = MAIN_REFER . $random_number;
+
         }
+
+        $sql = "SELECT support_id FROM users WHERE refer_code = '$referred_by'";
+        $db->sql($sql);
+        $refres = $db->getResult();
+        $num = $db->numRows($refres);
+        if ($num >= 1) {
+            $support_id = $refres[0]['support_id'];
+
+        }
+
     }
 
     // $currentdate = date('Y-m-d');
     $datetime = date('Y-m-d H:i:s');
-    $sql = "INSERT INTO users (`name`,`mobile`,`email`,`password`,`city`,`dob`,`referred_by`,`device_id`,`refer_code`,`last_updated`)VALUES('$name','$mobile','$email','$password','$city','$dob','$referred_by','$device_id','$refer_code','$datetime')";
+    $sql = "INSERT INTO users (`name`,`mobile`,`email`,`password`,`city`,`dob`,`referred_by`,`device_id`,`refer_code`,`last_updated`,`support_id`)VALUES('$name','$mobile','$email','$password','$city','$dob','$referred_by','$device_id','$refer_code','$datetime',$support_id)";
     $db->sql($sql);
     $sql = "SELECT * FROM users WHERE mobile = '$mobile'";
     $db->sql($sql);
