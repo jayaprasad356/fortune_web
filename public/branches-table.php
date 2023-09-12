@@ -24,8 +24,6 @@
                                     <th data-field="name" data-sortable="true">Name</th>
                                     <th data-field="short_code" data-sortable="true">Short Code</th>
                                     <th data-field="mobile" data-sortable="true">Mobile</th>
-                                    <th data-field="min_withdrawal" data-sortable="true">Min.Withdrawal</th>
-                                    <th data-field="trial_earnings" data-sortable="true">trial_earnings</th>
                                     <th data-field="operate">Action</th>
                                 </tr>
                             </thead>
