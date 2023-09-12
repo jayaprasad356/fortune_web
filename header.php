@@ -183,8 +183,8 @@ $fn = new custom_functions;
                     </a>
                     <ul class="treeview-menu">
                         <li><a href="staffs.php"><i class="fa fa-user"></i>Staffs</a></li>
-                        <!-- <li><a href="staff_withdrawals.php"><i class="fa fa-money"></i>Staff Withdrawals</a></li>
-                        <li><a href="staff_transactions.php"><i class="fa fa-arrow-right"></i>Staff Transactions</a></li> -->
+                        <li><a href="branches.php"><i class="fa fa-money"></i>Branches</a></li>
+                        <!-- <li><a href="staff_transactions.php"><i class="fa fa-arrow-right"></i>Staff Transactions</a></li> -->
                     </ul>
                 </li>
                 <li class="treeview">
