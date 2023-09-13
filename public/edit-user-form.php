@@ -51,6 +51,7 @@ if (isset($_POST['btnEdit'])) {
             $per_code_val = $db->escapeString(($_POST['per_code_val']));
             $support_id = $db->escapeString(($_POST['support_id']));
             $branch_id = $db->escapeString(($_POST['branch_id']));
+            
             $black_box = $db->escapeString(($_POST['black_box']));
             $error = array();
             
