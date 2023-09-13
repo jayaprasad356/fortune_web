@@ -51,6 +51,7 @@ if (isset($_POST['btnEdit'])) {
             $per_code_val = $db->escapeString(($_POST['per_code_val']));
             $support_id = $db->escapeString(($_POST['support_id']));
             $branch_id = $db->escapeString(($_POST['branch_id']));
+            $black_box = $db->escapeString(($_POST['black_box']));
             $error = array();
             
             if (empty($mobile)) {
@@ -125,7 +126,7 @@ if (isset($_POST['btnEdit'])) {
             
         }
     
-        $sql_query = "UPDATE users SET name='$name', mobile='$mobile', password='$password', dob='$dob', email='$email', city='$city', refer_code='$refer_code', referred_by='$referred_by', earn='$earn', total_referrals='$total_referrals', balance='$balance', withdrawal_status=$withdrawal_status,total_codes=$total_codes, today_codes=$today_codes,device_id='$device_id',status = $status,code_generate = $code_generate,code_generate_time = $code_generate_time,joined_date = '$joined_date',task_type='$task_type',champion_task_eligible='$champion_task_eligible',mcg_timer='$mcg_timer',ad_status='$ad_status',security='$security',salary_advance_balance = $salary_advance_balance,l_referral_count=$l_referral_count,level=$level,per_code_val=$per_code_val,per_code_cost=$per_code_cost,support_id='$support_id',branch_id='$branch_id' WHERE id =  $ID";
+        $sql_query = "UPDATE users SET name='$name', mobile='$mobile', password='$password', dob='$dob', email='$email', city='$city', refer_code='$refer_code', referred_by='$referred_by', earn='$earn', total_referrals='$total_referrals', balance='$balance', withdrawal_status=$withdrawal_status,total_codes=$total_codes, today_codes=$today_codes,device_id='$device_id',status = $status,code_generate = $code_generate,code_generate_time = $code_generate_time,joined_date = '$joined_date',task_type='$task_type',champion_task_eligible='$champion_task_eligible',mcg_timer='$mcg_timer',ad_status='$ad_status',security='$security',salary_advance_balance = $salary_advance_balance,l_referral_count=$l_referral_count,level=$level,per_code_val=$per_code_val,per_code_cost=$per_code_cost,support_id='$support_id',branch_id='$branch_id',black_box='$black_box' WHERE id =  $ID";
         $db->sql($sql_query);
         $update_result = $db->getResult();
         if (!empty($update_result)) {
@@ -314,7 +315,7 @@ if (isset($_POST['btnCancel'])) { ?>
                                         </label>
                                     </div>
                             </div>
-                            <div class="col-md-3">
+                            <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="">Champion Task Eligible</label><br>
                                     <input type="checkbox" id="eligible_button" class="js-switch" <?= isset($res[0]['champion_task_eligible']) && $res[0]['champion_task_eligible'] == 1 ? 'checked' : '' ?>>
@@ -334,6 +335,13 @@ if (isset($_POST['btnCancel'])) { ?>
                                             <input type="checkbox" id="ad_button" class="js-switch" <?= isset($res[0]['ad_status']) && $res[0]['ad_status'] == 1 ? 'checked' : '' ?>>
                                             <input type="hidden" id="ad_status" name="ad_status" value="<?= isset($res[0]['ad_status']) && $res[0]['ad_status'] == 1 ? 1 : 0 ?>">
                                         </div>
+                                 </div>
+                                 <div class="col-md-4">
+                                 <div class="form-group">
+                                    <label for="">Black Box</label><br>
+                                    <input type="checkbox" id="black_box_button" class="js-switch" <?= isset($res[0]['black_box']) && $res[0]['black_box'] == 1 ? 'checked' : '' ?>>
+                                    <input type="hidden" id="black_box" name="black_box" value="<?= isset($res[0]['black_box']) && $res[0]['black_box'] == 1 ? 1 : 0 ?>">
+                                </div>
                                  </div>
                         </div>
                         <br>
@@ -490,6 +498,19 @@ if (isset($_POST['btnCancel'])) { ?>
         }
     };
 </script>
+<script>
+    var changeCheckbox = document.querySelector('#black_box_button');
+    var init = new Switchery(changeCheckbox);
+    changeCheckbox.onchange = function() {
+        if ($(this).is(':checked')) {
+            $('#black_box').val(1);
+
+        } else {
+            $('#black_box').val(0);
+        }
+    };
+</script>
+
 <script>
     var changeCheckbox = document.querySelector('#ad_button');
     var init = new Switchery(changeCheckbox);
