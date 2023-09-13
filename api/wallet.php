@@ -84,25 +84,25 @@ if($code_generate == 1){
                 return false;
             }
 
-            if($user_black_box == '1'){
-                $sql = "SELECT * FROM `suspect_codes` WHERE user_id = $user_id AND status = 0 ORDER BY id DESC LIMIT 1";
-                $db->sql($sql);
-                $res = $db->getResult();
-                $num = $db->numRows($res);
-                if ($num == 1) {
-                    $s_id = $res[0]['id'];
-                    $sql = "UPDATE `suspect_codes` SET  `status` = 1 WHERE `id` = $s_id";
-                    $db->sql($sql);
+            // if($user_black_box == '1'){
+            //     $sql = "SELECT * FROM `suspect_codes` WHERE user_id = $user_id AND status = 0 ORDER BY id DESC LIMIT 1";
+            //     $db->sql($sql);
+            //     $res = $db->getResult();
+            //     $num = $db->numRows($res);
+            //     if ($num == 1) {
+            //         $s_id = $res[0]['id'];
+            //         $sql = "UPDATE `suspect_codes` SET  `status` = 1 WHERE `id` = $s_id";
+            //         $db->sql($sql);
                     
-                }else{
-                    $response['success'] = false;
-                    $response['message'] = "You cannot Sync now,please contact admin";
-                    print_r(json_encode($response));
-                    return false;
+            //     }else{
+            //         $response['success'] = false;
+            //         $response['message'] = "You cannot Sync now,please contact admin";
+            //         print_r(json_encode($response));
+            //         return false;
             
-                }
+            //     }
             
-            }
+            // }
     
             $sql = "INSERT INTO transactions (`user_id`,`codes`,`amount`,`datetime`,`type`)VALUES('$user_id','$codes','$amount','$datetime','$type')";
             $db->sql($sql);
