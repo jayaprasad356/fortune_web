@@ -31,10 +31,11 @@ $user_id = $db->escapeString($_POST['user_id']);
 $function->monitorUserApi('wallet',$user_id);
 $codes = (isset($_POST['codes']) && $_POST['codes'] != "") ? $db->escapeString($_POST['codes']) : 0;
 $user_black_box = (isset($_POST['black_box']) && $_POST['black_box'] != "") ? $db->escapeString($_POST['black_box']) : '0';
+$sync_unique_id = (isset($_POST['sync_unique_id']) && $_POST['sync_unique_id'] != "") ? $db->escapeString($_POST['sync_unique_id']) : '';
 $datetime = date('Y-m-d H:i:s');
 
 $type = 'generate';
-$sql = "SELECT level FROM users WHERE id = $user_id";
+$sql = "SELECT level,app_version FROM users WHERE id = $user_id";
 
 $db->sql($sql);
 $ures = $db->getResult();
@@ -43,15 +44,17 @@ $db->sql($sql);
 $set = $db->getResult();
 $code_generate = $set[0]['code_generate'];
 $sync_codes = $set[0]['sync_codes'];
+$app_version = $ures[0]['app_version'];
 $code_min_sync_time = $fn->get_sync_time($ures[0]['level']);
 
-
-$sql = "SELECT datetime FROM transactions WHERE user_id = $user_id AND type = 'generate' ORDER BY datetime DESC LIMIT 1 ";
+$t_sync_unique_id = '';
+$sql = "SELECT datetime,sync_unique_id FROM transactions WHERE user_id = $user_id AND type = 'generate' ORDER BY datetime DESC LIMIT 1 ";
 $db->sql($sql);
 $tres = $db->getResult();
 $num = $db->numRows($tres);
 if ($num >= 1) {
     $dt1 = $tres[0]['datetime'];
+    $t_sync_unique_id = $tres[0]['sync_unique_id'];
     $date1 = new DateTime($dt1);
     $date2 = new DateTime($datetime);
 
@@ -103,19 +106,26 @@ if($code_generate == 1){
             //     }
             
             // }
-    
-            $sql = "INSERT INTO transactions (`user_id`,`codes`,`amount`,`datetime`,`type`)VALUES('$user_id','$codes','$amount','$datetime','$type')";
-            $db->sql($sql);
-            $res = $db->getResult();
+
+            if(($app_version == 18 && $sync_unique_id != $t_sync_unique_id && $sync_unique_id != '') || $app_version != 18){
+                $sql = "INSERT INTO transactions (`user_id`,`codes`,`amount`,`datetime`,`type`,`sync_unique_id`)VALUES('$user_id','$codes','$amount','$datetime','$type','$sync_unique_id')";
+                $db->sql($sql);
+                $res = $db->getResult();
+            
+                $sql = "UPDATE `users` SET  `today_codes` = today_codes + $codes,`total_codes` = total_codes + $codes,`earn` = earn + $amount,`balance` = balance + $amount,`last_updated` = '$datetime' WHERE `id` = $user_id";
+                $db->sql($sql);
+   
         
-            $sql = "UPDATE `users` SET  `today_codes` = today_codes + $codes,`total_codes` = total_codes + $codes,`earn` = earn + $amount,`balance` = balance + $amount,`last_updated` = '$datetime' WHERE `id` = $user_id";
-            $db->sql($sql);
+
+            }
             $mentiondate = '2023-03-13';
-    
             $sql = "SELECT referred_by  FROM users WHERE id = $user_id AND `joined_date` >= '$mentiondate' AND status = 1";
             $db->sql($sql);
             $res = $db->getResult();
             $num = $db->numRows($res);
+
+    
+
             
         
             if($num == 1){
