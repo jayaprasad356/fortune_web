@@ -114,7 +114,7 @@ if (isset($_POST['btnEdit'])) {
         $fn->update_refer_code_cost($ID);
         $register_bonus_sent = $fn->get_value('users','register_bonus_sent',$ID);
         if($status == 1 && $register_bonus_sent != 1){
-            $join_codes = 1000;
+            $join_codes = 0;
             $register_bonus = $join_codes * COST_PER_CODE;
             $total_codes = $total_codes +  $join_codes;
             $today_codes = $today_codes +  $join_codes;
