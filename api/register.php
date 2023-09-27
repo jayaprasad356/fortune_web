@@ -124,20 +124,20 @@ else{
 
         }
 
-        $sql = "SELECT support_id FROM users WHERE refer_code = '$referred_by'";
-        $db->sql($sql);
-        $refres = $db->getResult();
-        $num = $db->numRows($refres);
-        if ($num >= 1) {
-            $support_id = $refres[0]['support_id'];
+        // $sql = "SELECT support_id FROM users WHERE refer_code = '$referred_by'";
+        // $db->sql($sql);
+        // $refres = $db->getResult();
+        // $num = $db->numRows($refres);
+        // if ($num >= 1) {
+        //     $support_id = $refres[0]['support_id'];
 
-        }
+        // }
 
     }
 
     // $currentdate = date('Y-m-d');
     $datetime = date('Y-m-d H:i:s');
-    $sql = "INSERT INTO users (`name`,`mobile`,`email`,`password`,`city`,`dob`,`referred_by`,`device_id`,`refer_code`,`last_updated`,`support_id`)VALUES('$name','$mobile','$email','$password','$city','$dob','$referred_by','$device_id','$refer_code','$datetime',$support_id)";
+    $sql = "INSERT INTO users (`name`,`mobile`,`email`,`password`,`city`,`dob`,`referred_by`,`device_id`,`refer_code`,`last_updated`)VALUES('$name','$mobile','$email','$password','$city','$dob','$referred_by','$device_id','$refer_code','$datetime')";
     $db->sql($sql);
     $sql = "SELECT * FROM users WHERE mobile = '$mobile'";
     $db->sql($sql);
