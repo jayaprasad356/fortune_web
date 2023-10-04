@@ -19,7 +19,7 @@ $db = new Database();
 $db->connect();
 $currentdate = date('Y-m-d');
 $datetime = date('Y-m-d H:i:s');
-$sql = "SELECT id FROM `users` WHERE status = 1";
+$sql = "SELECT id FROM `users` WHERE status = 1 AND code_generate = 1";
 $db->sql($sql);
 $res = $db->getResult();
 foreach ($res as $row) {
