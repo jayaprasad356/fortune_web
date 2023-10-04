@@ -146,6 +146,26 @@ class functions
         }
         return false;
     } //end of check_integer()
+    public function get_leave($id)
+    {
+        $date = date('Y-m-d');
+        $sql = "SELECT joined_date,datediff('$date', joined_date) AS history_days FROM users WHERE id=" . $id;
+        $this->db->sql($sql);
+        $res = $this->db->getResult();
+        
+        if (!empty($res) && isset($res[0]['joined_date'])) {
+            $joined_date = $res[0]['joined_date'];
+            $history_days = $res[0]['history_days'];
+            $sql = "SELECT count(*) AS leaves FROM `leaves` WHERE ((date BETWEEN '$joined_date' AND '$date') AND user_id = $id) OR (type = 'common_leave' AND (date BETWEEN '$joined_date' AND '$date'))";
+            $this->db->sql($sql);
+            $res = $this->db->getResult();
+            $leaves = $res[0]['leaves'];
+            $total_leaves = ($history_days - $leaves);
+            return $total_leaves;
+        } else {
+            return 0;
+        }
+    }
 
     function get_current_page()
     {
