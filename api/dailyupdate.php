@@ -18,7 +18,7 @@ $db->connect();
 include_once('../includes/functions.php');
 $fn = new functions;
 
-$sql = "UPDATE users SET code_generate = 0  WHERE worked_days = 30";
+$sql = "UPDATE users SET code_generate = 0  WHERE worked_days >= 30";
 $db->sql($sql);
 
 
