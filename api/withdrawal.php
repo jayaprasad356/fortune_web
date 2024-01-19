@@ -50,6 +50,7 @@ $res = $db->getResult();
 $balance = $res[0]['balance'];
 $withdrawal_status = $res[0]['withdrawal_status'];
 $datetime = date('Y-m-d H:i:s');
+$date = date('Y-m-d');
 $sql = "SELECT id FROM bank_details WHERE user_id = $user_id ";
 $db->sql($sql);
 $res = $db->getResult();
@@ -58,6 +59,27 @@ if($withdrawal_status == 1 &&  $main_ws == 1 ){
     if (($type == 'bank_transfer' && $num >= 1) || $type == 'cash_payment') {
         if($amount >= $min_withdrawal){
                 if($balance >= $amount){
+                    $max_withdrawal = 300;
+
+                    if ($amount > $max_withdrawal ) {
+                        $response['success'] = false;
+                        $response['message'] = "Maximum Withdrawal ₹".$max_withdrawal;
+                        print_r(json_encode($response));
+                        return false;
+                    }
+
+                    $sql = "SELECT id FROM withdrawals WHERE user_id = $user_id AND DATE(datetime) = '$date'";
+                    $db->sql($sql);
+                    $res= $db->getResult();
+                    $num = $db->numRows($res);
+        
+                    if ($num >= 1){
+                        $response['success'] = false;
+                        $response['message'] = "You Already Requested to Withdrawal pls wait...";
+                        print_r(json_encode($response));
+                        return false;
+        
+                    }
                     $sql = "UPDATE `users` SET `balance` = balance - $amount,`withdrawal` = withdrawal + $amount WHERE `id` = $user_id";
                     $db->sql($sql);
                     $sql = "INSERT INTO withdrawals (`user_id`,`amount`,`datetime`,`withdrawal_type`,`type`)VALUES('$user_id','$amount','$datetime','code_withdrawal','$type')";
