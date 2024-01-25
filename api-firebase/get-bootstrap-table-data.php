@@ -403,12 +403,12 @@ if (isset($_GET['table']) && $_GET['table'] == 'withdrawals') {
     
     if ((isset($_GET['status']) && $_GET['status'] != '')) {
         $status = $db->escapeString($fn->xss_clean($_GET['status']));
-        $where .= "AND w.status = '$status' ";
+        $where .= "AND l.status = '$status' ";
     }
     
     if ((isset($_GET['user_id']) && $_GET['user_id'] != '')) {
         $user_id = $db->escapeString($fn->xss_clean($_GET['user_id']));
-        $where .= "AND w.user_id = '$user_id' ";
+        $where .= "AND l.user_id = '$user_id' ";
     }
     
     if (isset($_GET['offset']))
