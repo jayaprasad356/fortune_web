@@ -443,16 +443,18 @@ if (isset($_GET['table']) && $_GET['table'] == 'withdrawals') {
         $join = "LEFT JOIN users u ON w.user_id = u.id LEFT JOIN bank_details b ON b.user_id = w.user_id WHERE (u.refer_code REGEXP '^$refer_code' AND (w.withdrawal_type != 'sa_withdrawal')) ";
     }
   
-    $sql = "SELECT COUNT(w.id) as total FROM `withdrawals` w $join " . $where . "";
+    $join = "LEFT JOIN `users` u ON l.user_id = u.id LEFT JOIN `bank_details` b ON u.id = b.user_id WHERE l.id IS NOT NULL " . $where;
+
+    $sql = "SELECT COUNT(l.id) AS total FROM `withdrawals` l " . $join;
     $db->sql($sql);
     $res = $db->getResult();
     foreach ($res as $row)
         $total = $row['total'];
-
-    $sql = "SELECT w.id AS id, w.*, w.type AS type, u.name, u.total_codes, u.total_referrals, u.balance, u.mobile, u.referred_by, u.refer_code, DATEDIFF('$currentdate', u.joined_date) AS history, b.branch, b.bank, b.account_num, b.ifsc, b.holder_name FROM `withdrawals` w $join
-    $where ORDER BY $sort $order LIMIT $offset, $limit";
+    
+    $sql = "SELECT l.id AS id, l.*, u.name, u.mobile, u.balance, u.total_codes, u.total_referrals, u.referred_by, u.refer_code, b.branch,b.bank,b.ifsc,b.account_num,b.holder_name ,DATEDIFF('$currentdate', u.joined_date) AS history FROM `withdrawals` l " . $join . " ORDER BY $sort $order LIMIT $offset, $limit";
     $db->sql($sql);
     $res = $db->getResult();
+    
 
     $bulkData = array();
     $bulkData['total'] = $total;
@@ -464,21 +466,21 @@ if (isset($_GET['table']) && $_GET['table'] == 'withdrawals') {
         $checkbox = '<input type="checkbox" name="enable[]" value="'.$row['id'].'">';
         $tempRow['id'] = $row['id'];
         $tempRow['name'] = $row['name'];
+        $tempRow['balance'] = $row['balance'];
+        $tempRow['mobile'] = $row['mobile'];
         $tempRow['amount'] = $row['amount'];
         $tempRow['datetime'] = $row['datetime'];
-        $tempRow['account_num'] = ','.$row['account_num'].',';
-        $tempRow['holder_name'] = $row['holder_name'];
-        $tempRow['bank'] = $row['bank'];
-        $tempRow['branch'] = $row['branch'];
         $tempRow['total_codes'] = $row['total_codes'];
         $tempRow['total_referrals'] = $row['total_referrals'];
-        $tempRow['mobile'] = $row['mobile'];
-        $tempRow['balance'] = $row['balance'];
         $tempRow['referred_by'] = $row['referred_by'];
         $tempRow['refer_code'] = $row['refer_code'];
         $tempRow['history'] = $row['history'];
         $tempRow['type'] = $row['type'];
+        $tempRow['branch'] = $row['branch'];
+        $tempRow['bank'] = $row['bank'];
         $tempRow['ifsc'] = $row['ifsc'];
+        $tempRow['account_num'] = ','.$row['account_num'].',';
+        $tempRow['holder_name'] = $row['holder_name'];
         $tempRow['column'] = $checkbox;
         if($row['status']==1)
             $tempRow['status'] ="<p class='text text-success'>Paid</p>";
