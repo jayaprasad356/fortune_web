@@ -47,7 +47,7 @@ if (isset($_POST['btnEdit'])) {
             $ad_status = $db->escapeString(($_POST['ad_status']));
             $l_referral_count = (isset($_POST['l_referral_count']) && !empty($_POST['l_referral_count'])) ? $db->escapeString($_POST['l_referral_count']) : 0;
             $per_code_cost = $db->escapeString(($_POST['per_code_cost']));
-            $level = $db->escapeString(($_POST['level']));
+            //$level = $db->escapeString(($_POST['level']));
             $per_code_val = $db->escapeString(($_POST['per_code_val']));
             $support_id = $db->escapeString(($_POST['support_id']));
             $branch_id = $db->escapeString(($_POST['branch_id']));
@@ -127,7 +127,7 @@ if (isset($_POST['btnEdit'])) {
             
         }
     
-        $sql_query = "UPDATE users SET name='$name', mobile='$mobile', password='$password', dob='$dob', email='$email', city='$city', refer_code='$refer_code', referred_by='$referred_by', earn='$earn', total_referrals='$total_referrals', balance='$balance', withdrawal_status=$withdrawal_status,total_codes=$total_codes, today_codes=$today_codes,device_id='$device_id',status = $status,code_generate = $code_generate,code_generate_time = $code_generate_time,joined_date = '$joined_date',task_type='$task_type',champion_task_eligible='$champion_task_eligible',mcg_timer='$mcg_timer',ad_status='$ad_status',security='$security',salary_advance_balance = $salary_advance_balance,l_referral_count=$l_referral_count,level=$level,per_code_val=$per_code_val,per_code_cost=$per_code_cost,support_id='$support_id',branch_id='$branch_id',black_box='$black_box',worked_days='$worked_days'  WHERE id =  $ID";
+        $sql_query = "UPDATE users SET name='$name', mobile='$mobile', password='$password', dob='$dob', email='$email', city='$city', refer_code='$refer_code', referred_by='$referred_by', earn='$earn', total_referrals='$total_referrals', balance='$balance', withdrawal_status=$withdrawal_status,total_codes=$total_codes, today_codes=$today_codes,device_id='$device_id',status = $status,code_generate = $code_generate,code_generate_time = $code_generate_time,joined_date = '$joined_date',task_type='$task_type',champion_task_eligible='$champion_task_eligible',mcg_timer='$mcg_timer',ad_status='$ad_status',security='$security',salary_advance_balance = $salary_advance_balance,l_referral_count=$l_referral_count,per_code_val=$per_code_val,per_code_cost=$per_code_cost,support_id='$support_id',branch_id='$branch_id',black_box='$black_box',worked_days='$worked_days'  WHERE id =  $ID";
         $db->sql($sql_query);
         $update_result = $db->getResult();
         if (!empty($update_result)) {
@@ -371,10 +371,6 @@ if (isset($_POST['btnCancel'])) { ?>
                             <br>
                             <div class="row">
                             <div class="form-group">
-                                <div class="col-md-3">
-                                    <label for="exampleInputEmail1">Level</label><i class="text-danger asterik">*</i>
-                                    <input type="number" class="form-control" name="level" value="<?php echo $res[0]['level']; ?>">
-                                </div>
                                 <div class="col-md-3">
                                     <label for="exampleInputEmail1">Per Code Value</label><i class="text-danger asterik">*</i>
                                     <input type="number" class="form-control" name="per_code_val" value="<?php echo $res[0]['per_code_val']; ?>">
