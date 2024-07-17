@@ -13,7 +13,7 @@ $db = new Database();
 $db->connect();
 include_once('../includes/functions.php');
 $fn = new functions;
-$fn->monitorApi('login');
+
 
 if (empty($_POST['mobile'])) {
     $response['success'] = false;
