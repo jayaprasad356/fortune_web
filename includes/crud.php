@@ -1,7 +1,7 @@
 <?php
 
 
-define('DOMAIN_URL', 'https://demofortune.graymatterworks.com/');
+define('DOMAIN_URL', 'https://fortune.graymatterworks.com/');
 define('ALLOW_MODIFICATION', 1);
 define('JWT_SECRET_KEY', '12345678');
 define('COST_PER_CODE', 0.17);
@@ -14,15 +14,15 @@ class Database
 
 
     //Live
-    private $db_host = "localhost";
-    private $db_user = "u152146582_fa";
-    private $db_pass = "Fapp@2022"; 
-    private $db_name = "u152146582_fa"; 
+    //private $db_host = "localhost";
+   // private $db_user = "u152146582_fa";
+    //private $db_pass = "Fapp@2022"; 
+    //private $db_name = "u152146582_fa"; 
     // Demo
-    // private $db_host = "localhost";
-    // private $db_user = "u743445510_demofortune";
-    // private $db_pass = "Fortune@2023"; 
-    // private $db_name = "u743445510_demofortune"; 
+     private $db_host = "localhost";
+     private $db_user = "u743445510_demofortune";
+     private $db_pass = "Fortune@2023"; 
+     private $db_name = "u743445510_demofortune"; 
 
     /*
      * Extra variables that are required by other function such as boolean con variable
