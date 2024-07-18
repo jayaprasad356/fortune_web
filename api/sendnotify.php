@@ -17,7 +17,7 @@ $fnc = new functions;
 include_once('../includes/custom-functions.php');
     
 $fn = new custom_functions;
-$fnc->monitorApi('sendnotify');
+
 $db = new Database();
 $db->connect();
 if (empty($_POST['mobile'])) {

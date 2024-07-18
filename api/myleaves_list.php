@@ -14,7 +14,7 @@ $db = new Database();
 $db->connect();
 include_once('../includes/functions.php');
 $fn = new functions;
-$fn->monitorApi('myleaves_list');
+
 
 
 if (empty($_POST['user_id'])) {

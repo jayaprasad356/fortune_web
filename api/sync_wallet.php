@@ -14,7 +14,7 @@ $db = new Database();
 $db->connect();
 include_once('../includes/functions.php');
 $fn = new functions;
-$fn->monitorApi('updateuser');
+
 
 
 $sql = "UPDATE users SET sync_refer_wallet = 0";

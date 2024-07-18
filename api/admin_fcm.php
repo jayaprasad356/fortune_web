@@ -15,7 +15,6 @@ $fn = new functions;
 $db = new Database();
 $db->connect();
 
-$fn->monitorApi('admin_fcm');
 
 if (empty($_POST['fcm_id'])) {
     $response['success'] = false;
