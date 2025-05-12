@@ -4,9 +4,7 @@ $function = new functions;
 include_once('includes/custom-functions.php');
 $fn = new custom_functions;
 
-$sql = "SELECT id, name FROM categories ORDER BY id ASC";
-$db->sql($sql);
-$res = $db->getResult();
+
 date_default_timezone_set('Asia/Kolkata');
 ?>
 <?php
