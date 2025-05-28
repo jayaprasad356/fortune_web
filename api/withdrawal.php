@@ -59,7 +59,7 @@ if($withdrawal_status == 1 &&  $main_ws == 1 ){
     if (($type == 'bank_transfer' && $num >= 1) || $type == 'cash_payment') {
         if($amount >= $min_withdrawal){
                 if($balance >= $amount){
-                    $max_withdrawal = 300;
+                    $max_withdrawal = 2000;
 
                     if ($amount > $max_withdrawal ) {
                         $response['success'] = false;

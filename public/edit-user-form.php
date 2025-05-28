@@ -155,6 +155,25 @@ $data = array();
 $sql_query = "SELECT * FROM users WHERE id =" . $ID;
 $db->sql($sql_query);
 $res = $db->getResult();
+$joined_date = $res[0]['joined_date'];
+$today_date = date('Y-m-d');
+$user_id = $res[0]['id'];
+$worked_days = 0;
+
+if ($joined_date) {
+    $joined = new DateTime($joined_date);
+    $today = new DateTime($today_date);
+    $interval = $joined->diff($today);
+    $total_days = $interval->days + 1;
+
+    $sql_leaves = "SELECT COUNT(*) AS leave_count FROM leaves WHERE user_id = '$user_id' AND date >= '$joined_date' AND date <= '$today_date'";
+    $db->sql($sql_leaves);
+    $res_leaves = $db->getResult();
+    $leave_count = $res_leaves[0]['leave_count'] ?? 0;
+
+    $worked_days = $total_days - $leave_count;
+}
+
 if (isset($_POST['btnCancel'])) { ?>
     <script>
         window.location.href = "users.php";
@@ -377,7 +396,8 @@ if (isset($_POST['btnCancel'])) { ?>
                                 </div>
                                 <div class="col-md-3">
                                     <label for="exampleInputEmail1">Worked Days</label><i class="text-danger asterik">*</i>
-                                    <input type="text" class="form-control" name="worked_days" value="<?php echo $res[0]['worked_days']; ?>">
+                                    <input type="text" class="form-control" name="worked_days" value="<?= $worked_days ?>" readonly>
+
                                 </div>
                             </div>
                         </div>
