@@ -39,6 +39,34 @@ $sql = "SELECT level,app_version FROM users WHERE id = $user_id";
 
 $db->sql($sql);
 $ures = $db->getResult();
+
+$joined_date = $ures[0]['joined_date'] ?? null;
+$today_date = date('Y-m-d');
+
+if ($joined_date) {
+    $joined = new DateTime($joined_date);
+    $today = new DateTime($today_date);
+    $interval = $joined->diff($today);
+    $total_days = $interval->days + 1;
+
+    $sql_leaves = "SELECT COUNT(*) AS leave_count FROM leaves WHERE user_id = '$user_id' AND date >= '$joined_date' AND date <= '$today_date'";
+    $db->sql($sql_leaves);
+    $res_leaves = $db->getResult();
+    $leave_count = $res_leaves[0]['leave_count'] ?? 0;
+
+    $worked_days = $total_days - $leave_count;
+} else {
+    $worked_days = 0;
+}
+
+// 💡 If worked_days >= 30, stop further processing
+if ($worked_days >= 30) {
+    $response['success'] = false;
+    $response['message'] = "Your work period is completed.Please contact admin to continue.";
+    print_r(json_encode($response));
+    return false;
+}
+
 $sql = "SELECT code_generate,num_sync_times,sync_codes,code_min_sync_time FROM settings";
 $db->sql($sql);
 $set = $db->getResult();
