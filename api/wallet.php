@@ -59,6 +59,18 @@ if ($joined_date) {
     $worked_days = 0;
 }
 
+$sql_today_leave = "SELECT id FROM leaves WHERE date = '$today_date'";
+$db->sql($sql_today_leave);
+$res_today_leave = $db->getResult();
+
+if (count($res_today_leave) > 0) {
+    $response['success'] = false;
+    $response['message'] = "Today is holiday. Take rest.";
+    print_r(json_encode($response));
+    return false;
+}
+
+
 // 💡 If worked_days >= 30, stop further processing
 if ($worked_days >= 30) {
     $response['success'] = false;
