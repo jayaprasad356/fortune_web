@@ -21,7 +21,7 @@ $fn = new functions;
 $sql = "UPDATE users SET code_generate = 0  WHERE worked_days >= 30";
 $db->sql($sql);
 
-$sql = "UPDATE users SET today_codes = 0"; 
+$sql = "UPDATE users SET today_codes = 0,level = 1"; 
 $db->sql($sql); 
 
 ?>
