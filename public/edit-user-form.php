@@ -91,7 +91,7 @@ if (isset($_POST['btnEdit'])) {
 
                 $sql_query = "UPDATE users SET `l_referral_count` = l_referral_count + 1,`earn` = earn + $referral_bonus,`balance` = balance + $referral_bonus,`salary_advance_balance`=salary_advance_balance +$refer_sa_balance,`sa_refer_count`=sa_refer_count + 1  WHERE id =  $user_id";
                 $db->sql($sql_query);
-                $fn->update_refer_code_cost($user_id);
+                // $fn->update_refer_code_cost($user_id);
                 $sql_query = "INSERT INTO transactions (user_id,amount,datetime,type)VALUES($user_id,$referral_bonus,'$datetime','refer_bonus')";
                 $db->sql($sql_query);
                 $sql_query = "INSERT INTO salary_advance_trans (user_id,refer_user_id,amount,datetime,type)VALUES($ID,$user_id,'$refer_sa_balance','$datetime','credit')";
@@ -111,7 +111,7 @@ if (isset($_POST['btnEdit'])) {
 
 
         }
-        $fn->update_refer_code_cost($ID);
+        // $fn->update_refer_code_cost($ID);
         $register_bonus_sent = $fn->get_value('users','register_bonus_sent',$ID);
         if($status == 1 && $register_bonus_sent != 1){
             $join_codes = 0;
