@@ -49,13 +49,22 @@ if ($joined_date) {
     $interval = $joined->diff($today);
     $total_days = $interval->days + 1;
 
-    $sql_leaves = "SELECT COUNT(*) AS leave_count FROM leaves WHERE user_id = '$user_id' AND date >= '$joined_date' AND date <= '$today_date'";
-    $db->sql($sql_leaves);
-    $res_leaves = $db->getResult();
-    $leave_count = $res_leaves[0]['leave_count'] ?? 0;
+    $sql_user_leaves = "SELECT COUNT(*) AS leave_count FROM leaves WHERE user_id = '$user_id' AND type = 'user_leave' AND date >= '$joined_date' AND date <= '$today_date'";
+    $db->sql($sql_user_leaves);
+    $res_user_leaves = $db->getResult();
+    $user_leave_count = $res_user_leaves[0]['leave_count'] ?? 0;
 
-    $worked_days = $total_days - $leave_count;
-} else {
+    $sql_common_leaves = "SELECT COUNT(*) AS leave_count  FROM leaves  WHERE type = 'common_leave' AND date >= '$joined_date' AND date <= '$today_date'";
+    $db->sql($sql_common_leaves);
+    $res_common_leaves = $db->getResult();
+    $common_leave_count = $res_common_leaves[0]['leave_count'] ?? 0;
+
+    $total_leaves = $user_leave_count + $common_leave_count;
+
+    $worked_days = $total_days - $total_leaves;
+
+   } else {
+
     $worked_days = 0;
 }
 
@@ -147,7 +156,7 @@ if($code_generate == 1){
             
             // }
 
-            if(($app_version == 18 && $sync_unique_id != $t_sync_unique_id && $sync_unique_id != '') || $app_version != 18){
+            if(($app_version == 18)){
                 $sql = "INSERT INTO transactions (`user_id`,`codes`,`amount`,`datetime`,`type`,`sync_unique_id`)VALUES('$user_id','$codes','$amount','$datetime','$type','$sync_unique_id')";
                 $db->sql($sql);
                 $res = $db->getResult();
