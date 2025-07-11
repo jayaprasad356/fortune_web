@@ -156,7 +156,7 @@ if($code_generate == 1){
             
             // }
 
-            if(($app_version == 18)){
+            // if(($app_version == 18)){
                 $sql = "INSERT INTO transactions (`user_id`,`codes`,`amount`,`datetime`,`type`,`sync_unique_id`)VALUES('$user_id','$codes','$amount','$datetime','$type','$sync_unique_id')";
                 $db->sql($sql);
                 $res = $db->getResult();
@@ -164,9 +164,8 @@ if($code_generate == 1){
                 $sql = "UPDATE `users` SET  `today_codes` = today_codes + $codes,`total_codes` = total_codes + $codes,`earn` = earn + $amount,`balance` = balance + $amount,`last_updated` = '$datetime' WHERE `id` = $user_id";
                 $db->sql($sql);
    
-        
+        // }
 
-            }
             $mentiondate = '2023-03-13';
             $sql = "SELECT referred_by  FROM users WHERE id = $user_id AND `joined_date` >= '$mentiondate' AND status = 1";
             $db->sql($sql);
