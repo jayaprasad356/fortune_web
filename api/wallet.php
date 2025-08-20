@@ -35,8 +35,7 @@ $sync_unique_id = (isset($_POST['sync_unique_id']) && $_POST['sync_unique_id'] !
 $datetime = date('Y-m-d H:i:s');
 
 $type = 'generate';
-$sql = "SELECT level,app_version FROM users WHERE id = $user_id";
-
+$sql = "SELECT level,app_version,joined_date FROM users WHERE id = $user_id";
 $db->sql($sql);
 $ures = $db->getResult();
 
